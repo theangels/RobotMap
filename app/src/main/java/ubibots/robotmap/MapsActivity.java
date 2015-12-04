@@ -16,6 +16,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private GoogleMapOptions options;
     private MapFragment mapFragment;
+    public static MapsActivity mapsActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void Init(){
+        mapsActivity = this;
         options = new GoogleMapOptions()
             .mapType(GoogleMap.MAP_TYPE_NORMAL)
             .compassEnabled(true)
