@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
@@ -13,18 +14,28 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private GoogleMapOptions options;
+    private MapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        // Obtain the MapFragment and get notified when the map is ready to be used.
+        Init();
     }
 
-
+    private void Init(){
+        options = new GoogleMapOptions()
+            .mapType(GoogleMap.MAP_TYPE_NORMAL)
+            .compassEnabled(true)
+            .rotateGesturesEnabled(true)
+            .tiltGesturesEnabled(true);
+        mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        mapFragment.newInstance(options);
+    }
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -37,12 +48,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Initial and move the camera
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.setMyLocationEnabled(true);
         LatLng initial = new LatLng(0, 0);
         mMap.addMarker(new MarkerOptions()
                 .position(initial)
                 .title("Marker in Initial"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(initial));
+        mMap.moveCamera(CameraUpdateFactory
+                .newLatLng(initial));
     }
 }
