@@ -9,6 +9,18 @@ public class EvilTransform {
     private double mgLat;
     private double mgLon;
 
+    public double getlat() {
+        return mgLat;
+    }
+
+    public double getLon() {
+        return mgLon;
+    }
+
+    public void access(){
+        transform2Mars(mgLat,mgLon);
+    }
+
     boolean outOfChina(double lat, double lon) {
         if (lon < 72.004 || lon > 137.8347)
             return true;
@@ -39,7 +51,7 @@ public class EvilTransform {
      * @param wgLat
      * @param wgLon mglat,mglon
      */
-    public void transform2Mars(double wgLat, double wgLon) {
+    private void transform2Mars(double wgLat, double wgLon) {
         if (outOfChina(wgLat, wgLon)) {
             mgLat = wgLat;
             mgLon = wgLon;
@@ -55,13 +67,5 @@ public class EvilTransform {
         dLon = (dLon * 180.0) / (a / sqrtMagic * Math.cos(radLat) * pi);
         mgLat = wgLat + dLat;
         mgLon = wgLon + dLon;
-    }
-
-    public double getlat() {
-        return mgLat;
-    }
-
-    public double getLon() {
-        return mgLon;
     }
 }
