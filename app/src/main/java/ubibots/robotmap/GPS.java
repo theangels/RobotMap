@@ -17,18 +17,20 @@ public class GPS implements ConnectionCallbacks,OnConnectionFailedListener{
     private Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
 
-    protected synchronized void buildGoogleApiClient() {
+    public GPS(){
         mGoogleApiClient = new GoogleApiClient.Builder(MapsActivity.mapsActivity)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+        mLastLocation = null;
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
+        System.out.println("Current Location is " + mLastLocation);
     }
 
     @Override
