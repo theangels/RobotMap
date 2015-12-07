@@ -1,5 +1,6 @@
 package ubibots.robotmap;
 
+import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -14,9 +15,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public static MapsActivity mapsActivity;
+    public static Context mContext;
     private GoogleMap mMap;
     private GoogleMapOptions options;
     private MapFragment mapFragment;
+    private GPS mGPS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void Init(){
         mapsActivity = this;
+        mContext = this;
         options = new GoogleMapOptions()
             .mapType(GoogleMap.MAP_TYPE_NORMAL)
             .compassEnabled(true)
@@ -37,6 +41,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mapFragment.newInstance(options);
+        mGPS = new GPS();
     }
     /**
      * Manipulates the map once available.
