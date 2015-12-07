@@ -1,6 +1,5 @@
 package ubibots.robotmap;
 
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -28,19 +27,22 @@ public class GPS implements ConnectionCallbacks,OnConnectionFailedListener{
     }
 
     protected synchronized void buildGoogleApiClient() {
+        System.out.println("Hello World!");
         mGoogleApiClient = new GoogleApiClient.Builder(MapsActivity.mContext)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+        System.out.println("Connect!");
+        mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
-        while(true){
-            System.out.println("Current GPS is " + mLastLocation);
+        if (mLastLocation != null) {
+            System.out.println("GPS is " + mLastLocation);
         }
     }
 
@@ -51,6 +53,6 @@ public class GPS implements ConnectionCallbacks,OnConnectionFailedListener{
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        System.err.println("Failed");
+        System.out.println(connectionResult);
     }
 }
