@@ -39,9 +39,9 @@ public class EvilTransform {
      * @param initLocation mglat,mglon
      */
     public static Location TransForm(Location initLocation) {
+        Location ret = new Location("");
         double wgLat = initLocation.getLatitude();
         double wgLon = initLocation.getLongitude();
-        Location ret = new Location("");
         if (outOfChina(wgLat, wgLon)) {
             ret.setLatitude(wgLat);
             ret.setLongitude(wgLon);

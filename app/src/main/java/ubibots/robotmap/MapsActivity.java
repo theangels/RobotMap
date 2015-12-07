@@ -1,7 +1,6 @@
 package ubibots.robotmap;
 
 import android.content.Context;
-import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -34,6 +33,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void Init(){
         mapsActivity = this;
         mContext = this;
+        mGPS = new GPS();
         options = new GoogleMapOptions()
             .mapType(GoogleMap.MAP_TYPE_NORMAL)
             .compassEnabled(true)
@@ -43,7 +43,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mapFragment.newInstance(options);
-        mGPS = new GPS();
     }
     /**
      * Manipulates the map once available.
@@ -59,11 +58,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.setMyLocationEnabled(true);
+        //while(true){
+       //     System.out.println(mGPS.getmLastLocation());
+       // }
+        /*
         LatLng initial = new LatLng(mGPS.getmLastLocation().getLatitude(), mGPS.getmLastLocation().getLongitude());
         mMap.addMarker(new MarkerOptions()
                 .position(initial)
                 .title("Marker in Initial"));
         mMap.moveCamera(CameraUpdateFactory
                 .newLatLng(initial));
+        */
     }
 }

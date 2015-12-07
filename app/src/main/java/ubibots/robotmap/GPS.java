@@ -22,35 +22,31 @@ public class GPS implements ConnectionCallbacks,OnConnectionFailedListener{
     }
 
     public GPS(){
+        mLastLocation = new Location("11,11");
         buildGoogleApiClient();
-        mLastLocation = null;
     }
 
-    protected synchronized void buildGoogleApiClient() {
-        System.out.println("Hello World!");
+    protected void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(MapsActivity.mContext)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        System.out.println("Connect!");
         mGoogleApiClient.connect();
+        System.out.println("Gps is " + mLastLocation);
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
         mLastLocation = EvilTransform.TransForm(LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient));
-
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        System.out.println(connectionResult);
     }
 }
