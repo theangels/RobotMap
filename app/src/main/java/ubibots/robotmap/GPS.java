@@ -39,11 +39,9 @@ public class GPS implements ConnectionCallbacks,OnConnectionFailedListener{
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-            System.out.println("GPS is " + mLastLocation);
-        }
+        mLastLocation = EvilTransform.TransForm(LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient));
+
     }
 
     @Override

@@ -59,7 +59,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.setMyLocationEnabled(true);
-        LatLng initial = new LatLng(0, 0);
+        LatLng initial = new LatLng(mGPS.getmLastLocation().getLatitude(), mGPS.getmLastLocation().getLongitude());
         mMap.addMarker(new MarkerOptions()
                 .position(initial)
                 .title("Marker in Initial"));

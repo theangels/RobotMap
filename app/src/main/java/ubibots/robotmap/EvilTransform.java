@@ -1,27 +1,14 @@
 package ubibots.robotmap;
 
+import android.location.Location;
+
 public class EvilTransform {
 
-    private double pi = 3.14159265358979324;
-    private double a = 6378245.0;
-    private double ee = 0.00669342162296594323;
-    private double x_pi = 3.14159265358979324 * 3000.0 / 180.0;
-    private double mgLat;
-    private double mgLon;
+    private static double pi = 3.14159265358979324;
+    private static double a = 6378245.0;
+    private static double ee = 0.00669342162296594323;
 
-    public double getlat() {
-        return mgLat;
-    }
-
-    public double getLon() {
-        return mgLon;
-    }
-
-    public void access(){
-        transform2Mars(mgLat,mgLon);
-    }
-
-    boolean outOfChina(double lat, double lon) {
+    private static boolean outOfChina(double lat, double lon) {
         if (lon < 72.004 || lon > 137.8347)
             return true;
         if (lat < 0.8293 || lat > 55.8271)
@@ -29,7 +16,7 @@ public class EvilTransform {
         return false;
     }
 
-    private double transformLat(double x, double y) {
+    private static double transformLat(double x, double y) {
         double ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));
         ret += (20.0 * Math.sin(6.0 * x * pi) + 20.0 * Math.sin(2.0 * x * pi)) * 2.0 / 3.0;
         ret += (20.0 * Math.sin(y * pi) + 40.0 * Math.sin(y / 3.0 * pi)) * 2.0 / 3.0;
@@ -37,7 +24,7 @@ public class EvilTransform {
         return ret;
     }
 
-    private double transformLon(double x, double y) {
+    private static double transformLon(double x, double y) {
         double ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
         ret += (20.0 * Math.sin(6.0 * x * pi) + 20.0 * Math.sin(2.0 * x * pi)) * 2.0 / 3.0;
         ret += (20.0 * Math.sin(x * pi) + 40.0 * Math.sin(x / 3.0 * pi)) * 2.0 / 3.0;
@@ -48,24 +35,29 @@ public class EvilTransform {
     /**
      * World Geodetic System ==> Mars Geodetic System
      *
-     * @param wgLat
-     * @param wgLon mglat,mglon
+     * @param initLocation
+     * @param initLocation mglat,mglon
      */
-    private void transform2Mars(double wgLat, double wgLon) {
+    public static Location TransForm(Location initLocation) {
+        double wgLat = initLocation.getLatitude();
+        double wgLon = initLocation.getLongitude();
+        Location ret = new Location("");
         if (outOfChina(wgLat, wgLon)) {
-            mgLat = wgLat;
-            mgLon = wgLon;
-            return;
+            ret.setLatitude(wgLat);
+            ret.setLongitude(wgLon);
         }
-        double dLat = transformLat(wgLon - 105.0, wgLat - 35.0);
-        double dLon = transformLon(wgLon - 105.0, wgLat - 35.0);
-        double radLat = wgLat / 180.0 * pi;
-        double magic = Math.sin(radLat);
-        magic = 1 - ee * magic * magic;
-        double sqrtMagic = Math.sqrt(magic);
-        dLat = (dLat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * pi);
-        dLon = (dLon * 180.0) / (a / sqrtMagic * Math.cos(radLat) * pi);
-        mgLat = wgLat + dLat;
-        mgLon = wgLon + dLon;
+        else {
+            double dLat = transformLat(wgLon - 105.0, wgLat - 35.0);
+            double dLon = transformLon(wgLon - 105.0, wgLat - 35.0);
+            double radLat = wgLat / 180.0 * pi;
+            double magic = Math.sin(radLat);
+            magic = 1 - ee * magic * magic;
+            double sqrtMagic = Math.sqrt(magic);
+            dLat = (dLat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * pi);
+            dLon = (dLon * 180.0) / (a / sqrtMagic * Math.cos(radLat) * pi);
+            ret.setLatitude(wgLat + dLat);
+            ret.setLongitude(wgLon + dLon);
+        }
+        return ret;
     }
 }
