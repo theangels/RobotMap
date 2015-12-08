@@ -9,6 +9,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
+
 /**
  * Created by TheAngels on 2015/12/5.
  */
@@ -22,18 +23,17 @@ public class GPS implements ConnectionCallbacks,OnConnectionFailedListener{
     }
 
     public GPS(){
-        mLastLocation = new Location("11,11");
+        mLastLocation = null;
         buildGoogleApiClient();
     }
 
-    protected void buildGoogleApiClient() {
+    protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(MapsActivity.mContext)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
-        System.out.println("Gps is " + mLastLocation);
     }
 
     @Override
