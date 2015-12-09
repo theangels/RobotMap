@@ -14,7 +14,7 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 /**
  * Created by TheAngels on 2015/12/5.
  */
-public class GPS implements ConnectionCallbacks,OnConnectionFailedListener{
+public class GPS implements ConnectionCallbacks, OnConnectionFailedListener {
 
     private Location mCurrentLocation;
     private GoogleApiClient mGoogleApiClient;
@@ -23,7 +23,7 @@ public class GPS implements ConnectionCallbacks,OnConnectionFailedListener{
         return mCurrentLocation;
     }
 
-    public GPS(){
+    public GPS() {
         mCurrentLocation = null;
         buildGoogleApiClient();
     }

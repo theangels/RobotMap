@@ -27,6 +27,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MapFragment mapFragment;
     private GPS mGPS;
     private final Timer timer = new Timer();
+
     public GoogleMap getmMap() {
         return mMap;
     }
