@@ -26,10 +26,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMapOptions options;
     private MapFragment mapFragment;
     private GPS mGPS;
-
     private final Timer timer = new Timer();
-    private TimerTask task;
-
     public GoogleMap getmMap() {
         return mMap;
     }
@@ -51,7 +48,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             .compassEnabled(true)
             .rotateGesturesEnabled(true)
             .tiltGesturesEnabled(true);
-        task = new TimerTask() {
+        TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 // TODO Auto-generated method stub
