@@ -88,9 +88,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             // 要做的事情
-            System.out.println(mGPS.getmLastLocation());
-            if(mGPS.getmLastLocation() != null){
-                Location mLocation = mGPS.getmLastLocation();
+            System.out.println(mGPS.getmCurrentLocation());
+            if(mGPS.getmCurrentLocation() != null){
+                Location mLocation = mGPS.getmCurrentLocation();
                 LatLng initial = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
 
                 MapsActivity.mapsActivity.getmMap().addMarker(new MarkerOptions()

@@ -15,15 +15,15 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
  */
 public class GPS implements ConnectionCallbacks,OnConnectionFailedListener{
 
-    private Location mLastLocation;
+    private Location mCurrentLocation;
     private GoogleApiClient mGoogleApiClient;
 
-    public Location getmLastLocation() {
-        return mLastLocation;
+    public Location getmCurrentLocation() {
+        return mCurrentLocation;
     }
 
     public GPS(){
-        mLastLocation = null;
+        mCurrentLocation = null;
         buildGoogleApiClient();
     }
 
@@ -38,7 +38,7 @@ public class GPS implements ConnectionCallbacks,OnConnectionFailedListener{
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        mLastLocation = EvilTransform.TransForm(LocationServices.FusedLocationApi.getLastLocation(
+        mCurrentLocation = EvilTransform.TransForm(LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient));
     }
 
