@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -14,10 +15,11 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 /**
  * Created by TheAngels on 2015/12/5.
  */
-public class GPS implements ConnectionCallbacks, OnConnectionFailedListener {
+public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,LocationListener{
 
     private Location mCurrentLocation;
     private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
 
     public Location getmCurrentLocation() {
         return mCurrentLocation;
@@ -25,7 +27,10 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener {
 
     public GPS() {
         mCurrentLocation = null;
+        mLocationRequest = null;
         buildGoogleApiClient();
+        createLocationRequest();
+        mGoogleApiClient.connect();
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -34,13 +39,15 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener {
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
         mCurrentLocation = EvilTransform.TransForm(LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient));
+        if (mLocationRequest != null) {
+            startLocationUpdates();
+        }
     }
 
     @Override
@@ -51,10 +58,30 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener {
     public void onConnectionFailed(ConnectionResult connectionResult) {
     }
 
+    /**
+     * If your app accesses the network or does other long-running work after receiving a location update,
+     * adjust the fastest interval to a slower value. This adjustment prevents your app from receiving updates
+     * it can't use. Once the long-running work is done, set the fastest interval back to a fast value.
+     */
     protected void createLocationRequest() {
-        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mCurrentLocation = EvilTransform.TransForm(location);
+        updateUI();
+    }
+
+    private void updateUI() {
+        System.out.println("Current GPS is " + mCurrentLocation);
     }
 }

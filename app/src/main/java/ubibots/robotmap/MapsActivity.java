@@ -58,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 handler.sendMessage(message);
             }
         };
-        timer.schedule(task, 1000, 3000);//推迟发送 发送间断
+        timer.schedule(task, 1000, 5000);//推迟发送 发送间断
         mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -94,7 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 MapsActivity.mapsActivity.getmMap().addMarker(new MarkerOptions()
                         .position(initial)
                         .title("Marker in Initial"));
-                timer.cancel();
+                //timer.cancel();
             }
             super.handleMessage(msg);
         }
