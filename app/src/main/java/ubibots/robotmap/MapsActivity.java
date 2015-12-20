@@ -74,6 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void GetRouteInit(){
         mGetRoute = new GetRoute();
+        GetRoute.DownloadTask mDownloadTask = mGetRoute.new DownloadTask();
     }
     /**
      * Manipulates the map once available.
