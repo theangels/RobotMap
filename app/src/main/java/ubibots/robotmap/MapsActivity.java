@@ -14,6 +14,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,6 +28,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private MapFragment mapFragment;
     private GPS mGPS;
     private final Timer timer = new Timer();
+    private GetRoute mGetRoute;
 
     public GoogleMap getmMap() {
         return mMap;
@@ -37,18 +39,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the MapFragment and get notified when the map is ready to be used.
-        Init();
+        MapInit();
+        GPSInit();
+        GetRouteInit();
     }
 
-    private void Init(){
+    private void MapInit(){
         mapsActivity = this;
         mContext = this;
-        mGPS = new GPS();
         options = new GoogleMapOptions()
-            .mapType(GoogleMap.MAP_TYPE_NORMAL)
-            .compassEnabled(true)
-            .rotateGesturesEnabled(true)
-            .tiltGesturesEnabled(true);
+                .mapType(GoogleMap.MAP_TYPE_NORMAL)
+                .compassEnabled(true)
+                .rotateGesturesEnabled(true)
+                .tiltGesturesEnabled(true);
+        mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        mapFragment.newInstance(options);
+    }
+
+    private void GPSInit(){
+        mGPS = new GPS();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -59,10 +70,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
         timer.schedule(task, 1000, 5000);//推迟发送 发送间断
-        mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        mapFragment.newInstance(options);
+    }
+
+    private void GetRouteInit(){
+        mGetRoute = new GetRoute();
     }
     /**
      * Manipulates the map once available.

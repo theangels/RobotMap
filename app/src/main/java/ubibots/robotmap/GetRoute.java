@@ -33,10 +33,6 @@ public class GetRoute {
         return mPoint;
     }
 
-    public void setmPoint(ArrayList<LatLng> mPoint) {
-        this.mPoint = mPoint;
-    }
-
     /**
      * 通过起点终点，组合成url
      */
@@ -71,7 +67,7 @@ public class GetRoute {
     /**
      * 从Url下载json信息
      */
-    public String downloadUrl(String strUrl) throws IOException {
+    private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
@@ -148,7 +144,7 @@ public class GetRoute {
     /**
      * 解析json类
      */
-    public class ParserTask extends
+    private class ParserTask extends
             AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
         // Parsing the data in non-ui thread
@@ -217,7 +213,7 @@ public class GetRoute {
         }
     }
 
-    public class DirectionsJSONParser {
+    private class DirectionsJSONParser {
         /**
          * Receives a JSONObject and returns a list of lists containing latitude and
          * longitude
