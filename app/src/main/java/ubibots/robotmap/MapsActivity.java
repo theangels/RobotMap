@@ -6,15 +6,18 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,6 +32,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GPS mGPS;
     private final Timer timer = new Timer();
     private GetRoute mGetRoute;
+    private GetRoute.DownloadTask mDownloadTask;
+    private Button mButton;
+    private MarkerOptions mMarkerOption;
+    private Marker mMarker;
 
     public GoogleMap getmMap() {
         return mMap;
@@ -40,8 +47,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         // Obtain the MapFragment and get notified when the map is ready to be used.
         MapInit();
+        MarkerInit();
         GPSInit();
         GetRouteInit();
+        ButtonInit();
     }
 
     private void MapInit(){
@@ -74,7 +83,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void GetRouteInit(){
         mGetRoute = new GetRoute();
-        GetRoute.DownloadTask mDownloadTask = mGetRoute.new DownloadTask();
+        mDownloadTask = mGetRoute.new DownloadTask();
+    }
+
+    private void ButtonInit(){
+        mButton = (Button)findViewById(R.id.button);
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mGPS.getmCurrentLocation()!=null){
+                    LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(),mGPS.getmCurrentLocation().getLongitude());
+                    LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
+                    try{
+                        mDownloadTask.execute(mGetRoute.getDirectionsUrl(op, ed));
+                    }
+                    catch (Exception ex){
+                        System.out.println(ex);
+                    }
+                }
+                else{
+                    Toast.makeText(mContext, "Get GPS failed!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void MarkerInit(){
+        mMarkerOption = new MarkerOptions();
     }
     /**
      * Manipulates the map once available.
@@ -102,10 +137,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if(mGPS.getmCurrentLocation() != null){
                 Location mLocation = mGPS.getmCurrentLocation();
                 LatLng initial = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-
-                MapsActivity.mapsActivity.getmMap().addMarker(new MarkerOptions()
+                if(mMarker!=null){
+                    mMarker.remove();
+                }
+                mMarkerOption
                         .position(initial)
-                        .title("Marker in Initial"));
+                        .title("Marker in Initial");
+                mMarker = MapsActivity.mapsActivity.getmMap().addMarker(mMarkerOption);
                 //timer.cancel();
             }
             super.handleMessage(msg);
