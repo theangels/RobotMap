@@ -30,7 +30,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMapOptions options;
     private MapFragment mapFragment;
     private GPS mGPS;
-    private final Timer timer = new Timer();
+    private final Timer mTimer = new Timer();
     private GetRoute mGetRoute;
     private GetRoute.DownloadTask mDownloadTask;
     private Button mButton;
@@ -78,7 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 handler.sendMessage(message);
             }
         };
-        timer.schedule(task, 1000, 5000);//推迟发送 发送间断
+        mTimer.schedule(task, 1000, 5000);//推迟发送 发送间断
     }
 
     private void GetRouteInit(){
