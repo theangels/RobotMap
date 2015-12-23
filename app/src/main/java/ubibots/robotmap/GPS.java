@@ -21,6 +21,7 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,Loca
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
 
+    /** Debug */
     public void setmCurrentLocation(Location mCurrentLocation) {
         this.mCurrentLocation = mCurrentLocation;
     }
