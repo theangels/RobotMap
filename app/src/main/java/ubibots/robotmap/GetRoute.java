@@ -35,7 +35,7 @@ public class GetRoute {
         return mPoint;
     }
 
-    GetRoute(){
+    GetRoute() {
         mMarker = new ArrayList<Marker>();
     }
 
@@ -210,15 +210,15 @@ public class GetRoute {
             // Drawing polyline in the Google Map for the i-th route
             MapsActivity.mapsActivity.getmMap().addPolyline(lineOptions);
 
-            for(int i = 0; i < mMarker.size(); i++){
+            for (int i = 0; i < mMarker.size(); i++) {
                 mMarker.get(i).remove();
             }
             mMarker.clear();
-            for(int i = 0; i < mPoint.size(); i++){
+            for (int i = 0; i < mPoint.size(); i++) {
                 mMarker.add(MapsActivity.mapsActivity.getmMap().addMarker(new MarkerOptions()
                         .position(mPoint.get(i))
                         .title("Marker in Initial")));
-                System.out.println("Point" + (i+1) + ":" + mPoint.get(i));
+                System.out.println("Point" + (i + 1) + ":" + mPoint.get(i));
             }
         }
     }
@@ -312,5 +312,31 @@ public class GetRoute {
             }
             return poly;
         }
+    }
+
+    private static double angToRad(double angle_d)  ///度数转弧度
+    {
+        double Pi = 3.1415926535898;
+        double rad1;
+        rad1 = angle_d * Pi / 180;
+        return rad1;
+    }
+
+    public static double getAzimuth(LatLng X, LatLng Y) {
+        double azimuth;
+        double averageLat = (X.latitude + Y.latitude) / 2;
+        if (X.latitude - Y.latitude == 0) {
+            azimuth = 90;
+        } else {
+            azimuth = Math.atan((X.longitude - Y.longitude) * Math.cos(angToRad(averageLat)) / (X.latitude - Y.latitude)) * 180 / Math.PI;
+        }
+        if (X.latitude > Y.latitude) {
+            azimuth = azimuth + 180;
+        }
+        if (azimuth < 0) {
+            azimuth = 360 + azimuth;
+        }
+        //azimuth = Math.Round(azimuth, 0);
+        return azimuth;
     }
 }
