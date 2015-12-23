@@ -30,7 +30,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMapOptions options;
     private MapFragment mapFragment;
     private GPS mGPS;
-    private final Timer mTimer = new Timer();
+    private final Timer mGetGPSTimer = new Timer();
+    private final Timer mGetDestTimer = new Timer();
     private GetRoute mGetRoute;
     private GetRoute.DownloadTask mDownloadTask;
     private Button mButton;
@@ -77,10 +78,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // TODO Auto-generated method stub
                 Message message = new Message();
                 message.what = 1;
-                handler.sendMessage(message);
+                getGPSHandler.sendMessage(message);
             }
         };
-        mTimer.schedule(task, 1000, 5000);//推迟发送 发送间断
+        mGetGPSTimer.schedule(task, 1000, 3000);//推迟 间断
     }
 
     private void GetRouteInit(){
@@ -93,21 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mGPS.setmCurrentLocation(null);
                 mControl.requirePlace();
-                if(mGPS.getmCurrentLocation()!=null){
-                    LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(),mGPS.getmCurrentLocation().getLongitude());
-                    LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
-                    try{
-                        mDownloadTask.execute(mGetRoute.getDirectionsUrl(op, ed));
-                    }
-                    catch (Exception ex){
-                        System.out.println(ex);
-                    }
-                }
-                else{
-                    Toast.makeText(mContext, "Get GPS failed!", Toast.LENGTH_SHORT).show();
-                }
             }
         });
     }
@@ -118,6 +105,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void ControlInit(){
         mControl = new Control();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                Message message = new Message();
+                message.what = 1;
+                controlHandler.sendMessage(message);
+            }
+        };
+        mGetDestTimer.schedule(task, 1000, 3000);//推迟 间断
     }
     /**
      * Manipulates the map once available.
@@ -135,13 +132,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMyLocationEnabled(true);
     }
 
-    //不间断发送信息0.4秒一次
-    Handler handler = new Handler() {
+    //不间断获取GPS 3秒一次
+    Handler getGPSHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             // 要做的事情
+
+            /**Debug*/
             System.out.println(mGPS.getmCurrentLocation());
+
             if(mGPS.getmCurrentLocation() != null){
                 Location mLocation = mGPS.getmCurrentLocation();
                 LatLng initial = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
@@ -152,8 +152,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .position(initial)
                         .title("Marker in Initial");
                 mMarker = MapsActivity.mapsActivity.getmMap().addMarker(mMarkerOption);
-                //timer.cancel();
             }
+
+            super.handleMessage(msg);
+        }
+    };
+
+    //不间断询问导航 3秒一次
+    Handler controlHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            // TODO Auto-generated method stub
+            // 要做的事情
+
+            /**Debug*/
+            System.out.println(mControl.getDest());
+
+            if(mGPS.getmCurrentLocation()!=null && mControl.isRequireFinish()){
+                mControl.setRequireFinish(false);
+                LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(),mGPS.getmCurrentLocation().getLongitude());
+                if(mControl.getDest().compareTo("图书馆") == 0) {
+                    LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
+                    mDownloadTask.execute(mGetRoute.getDirectionsUrl(op, ed));
+                }
+            }
+
             super.handleMessage(msg);
         }
     };
