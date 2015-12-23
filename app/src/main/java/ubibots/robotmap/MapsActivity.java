@@ -36,6 +36,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button mButton;
     private MarkerOptions mMarkerOption;
     private Marker mMarker;
+    private Control mControl;
 
     public GoogleMap getmMap() {
         return mMap;
@@ -51,6 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GPSInit();
         GetRouteInit();
         ButtonInit();
+        ControlInit();
     }
 
     private void MapInit(){
@@ -91,6 +93,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mGPS.setmCurrentLocation(null);
+                mControl.requirePlace();
                 if(mGPS.getmCurrentLocation()!=null){
                     LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(),mGPS.getmCurrentLocation().getLongitude());
                     LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
@@ -110,6 +114,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void MarkerInit(){
         mMarkerOption = new MarkerOptions();
+    }
+
+    private void ControlInit(){
+        mControl = new Control();
     }
     /**
      * Manipulates the map once available.
