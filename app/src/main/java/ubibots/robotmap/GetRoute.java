@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -28,9 +29,14 @@ import java.util.List;
 public class GetRoute {
 
     private ArrayList<LatLng> mPoint;
+    private ArrayList<Marker> mMarker;
 
     public ArrayList<LatLng> getmPoint() {
         return mPoint;
+    }
+
+    GetRoute(){
+        mMarker = new ArrayList<Marker>();
     }
 
     /**
@@ -173,9 +179,8 @@ public class GetRoute {
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
             ArrayList<LatLng> points = null;
             PolylineOptions lineOptions = null;
-            MarkerOptions markerOptions = new MarkerOptions();
             mPoint = new ArrayList<LatLng>();
-
+            /***/
             // Traversing through all the routes
             for (int i = 0; i < result.size(); i++) {
                 points = new ArrayList<LatLng>();
@@ -204,10 +209,15 @@ public class GetRoute {
             }
             // Drawing polyline in the Google Map for the i-th route
             MapsActivity.mapsActivity.getmMap().addPolyline(lineOptions);
+
+            for(int i = 0; i < mMarker.size(); i++){
+                mMarker.get(i).remove();
+            }
+            mMarker.clear();
             for(int i = 0; i < mPoint.size(); i++){
-                MapsActivity.mapsActivity.getmMap().addMarker(new MarkerOptions()
+                mMarker.add(MapsActivity.mapsActivity.getmMap().addMarker(new MarkerOptions()
                         .position(mPoint.get(i))
-                        .title("Marker in Initial"));
+                        .title("Marker in Initial")));
                 System.out.println("Point" + (i+1) + ":" + mPoint.get(i));
             }
         }
