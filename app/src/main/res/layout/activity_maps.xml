@@ -17,6 +17,13 @@
         android:layout_height="wrap_content"
         android:text="Test"
         android:id="@+id/button"
+        android:layout_gravity="center_horizontal|bottom" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/toNextPoint"
         android:layout_gravity="center_horizontal|top" />
 
 </FrameLayout>
