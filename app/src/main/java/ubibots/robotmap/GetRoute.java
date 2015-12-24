@@ -217,8 +217,10 @@ public class GetRoute {
             for (int i = 0; i < mPoint.size(); i++) {
                 mMarker.add(MapsActivity.mapsActivity.getmMap().addMarker(new MarkerOptions()
                         .position(mPoint.get(i))
-                        .title("Marker in Initial")));
-                System.out.println("Point" + (i + 1) + ":" + mPoint.get(i));
+                        .title(""+i)));
+                System.out.println("Point" + (i) + ":" + mPoint.get(i));
+                if(i!=0)
+                    System.out.println("No." + (i) + "as for " + (i-1) + ": " + "Azimuth is " + GetRoute.getAzimuth(mPoint.get(i-1),mPoint.get(i)));
             }
         }
     }
