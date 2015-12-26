@@ -205,14 +205,14 @@ public class GetRoute {
                 lineOptions.color(Color.BLUE);
             }
             // Drawing polyline in the Google Map for the i-th route
-            MapsActivity.mMapsActivity.getmGoogleMap().addPolyline(lineOptions);
+            MapsActivity.mapsActivity.getGoogleMap().addPolyline(lineOptions);
 
             for (int i = 0; i < mMarker.size(); i++) {
                 mMarker.get(i).remove();
             }
             mMarker.clear();
             for (int i = 0; i < mPoint.size(); i++) {
-                mMarker.add(MapsActivity.mMapsActivity.getmGoogleMap().addMarker(new MarkerOptions()
+                mMarker.add(MapsActivity.mapsActivity.getGoogleMap().addMarker(new MarkerOptions()
                         .position(mPoint.get(i))
                         .title("" + i)));
             }

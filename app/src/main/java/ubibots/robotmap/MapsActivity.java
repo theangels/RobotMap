@@ -22,23 +22,24 @@ import java.util.TimerTask;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
-    public static MapsActivity mMapsActivity;
-    public static Context mContext;
+    public static MapsActivity mapsActivity;
+    public static Context context;
 
-    private GoogleMap mGoogleMap;
+    private GoogleMap googleMap;
     private GPS mGPS;
-    private GetTarget mGetTarget;
-    private GetRoute mGetRoute;
+    private GetTarget getTarget;
+    private GetRoute getRoute;
 
-    private final Timer mGetGPSTimer = new Timer();
-    private final Timer mGetDestTimer = new Timer();
+    private final Timer getGPSTimer = new Timer();
+    private final Timer getDestTimer = new Timer();
+    private final Timer findTheWayTimer = new Timer();
 
-    private GetRoute.DownloadTask mDownloadTask;
-    private MarkerOptions mMarkerOption;
-    private Marker mMarker;
+    private GetRoute.DownloadTask downloadTask;
+    private MarkerOptions markerOption;
+    private Marker marker;
 
-    public GoogleMap getmGoogleMap() {
-        return mGoogleMap;
+    public GoogleMap getGoogleMap() {
+        return googleMap;
     }
 
     @Override
@@ -54,8 +55,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void mapInit(){
-        mMapsActivity = this;
-        mContext = this;
+        mapsActivity = this;
+        context = this;
         GoogleMapOptions options = new GoogleMapOptions()
                 .mapType(GoogleMap.MAP_TYPE_NORMAL)
                 .compassEnabled(true)
@@ -69,12 +70,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void GPSInit(){
         mGPS = new GPS();
-        mGetGPSTimer.schedule(getGPSTask, 1000, 3000);//推迟 间断
+        getGPSTimer.schedule(getGPSTask, 1000, 3000);//推迟 间断
     }
 
     private void getRouteInit(){
-        mGetRoute = new GetRoute();
-        mDownloadTask = mGetRoute.new DownloadTask();
+        getRoute = new GetRoute();
+        downloadTask = getRoute.new DownloadTask();
     }
 
     private void buttonInit(){
@@ -82,25 +83,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mGetTarget.requirePlace();
-                mGetDestTimer.schedule(getTargetTask, 1000, 3000);//推迟 间断
+                getTarget.requirePlace();
+                getDestTimer.schedule(getTargetTask, 1000, 3000);//推迟 间断
             }
         });
     }
 
     private void MarkerInit(){
-        mMarkerOption = new MarkerOptions();
+        markerOption = new MarkerOptions();
     }
 
     private void getTargetInit(){
-        mGetTarget = new GetTarget();
+        getTarget = new GetTarget();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mGoogleMap = googleMap;
-        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mGoogleMap.setMyLocationEnabled(true);
+        googleMap = googleMap;
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        googleMap.setMyLocationEnabled(true);
     }
 
     TimerTask getGPSTask = new TimerTask() {
@@ -126,13 +127,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if (mGPS.getmCurrentLocation() != null) {
                         Location mLocation = mGPS.getmCurrentLocation();
                         LatLng initial = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-                        if (mMarker != null) {
-                            mMarker.remove();
+                        if (marker != null) {
+                            marker.remove();
                         }
-                        mMarkerOption
+                        markerOption
                                 .position(initial)
                                 .title("Marker in Initial");
-                        mMarker = mGoogleMap.addMarker(mMarkerOption);
+                        marker = googleMap.addMarker(markerOption);
                     }
                     break;
             }
@@ -158,17 +159,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 case 1:
 
                     /**Debug*/
-                    System.out.println(mGetTarget.getDest());
+                    System.out.println(getTarget.getDest());
 
-                    Flag.requireFinish = false;
-                    getTargetTask.cancel();
                     if (mGPS.getmCurrentLocation() != null && Flag.requireFinish) {
+                        Flag.requireFinish = false;
+                        getTargetTask.cancel();
                         LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
-                        if (mGetTarget.getDest().compareTo("图书馆") == 0) {
+                        if (getTarget.getDest().compareTo("图书馆") == 0) {
                             LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
-                            mDownloadTask.execute(mGetRoute.getDirectionsUrl(op, ed));
+                            downloadTask.execute(getRoute.getDirectionsUrl(op, ed));
+
+                            Flag.findTheWayStart = true;
                         }
                     }
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+    TimerTask findTheWayTask = new TimerTask() {
+        @Override
+        public void run() {
+            Message message = new Message();
+            message.what = 1;
+            getTargetHandler.sendMessage(message);
+        }
+    };
+    /**不间断询问导航 3秒一次*/
+    Handler findTheWayHandler = new Handler() {
+        @Override
+        public synchronized void handleMessage(Message msg) {
+            // TODO Auto-generated method stub
+            // 要做的事情
+            switch (msg.what) {
+                case 1:
+
+                    /**Debug*/
+                    System.out.println(getTarget.getDest());
+
+
             }
             super.handleMessage(msg);
         }

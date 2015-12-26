@@ -31,7 +31,7 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,Loca
     }
 
     protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(MapsActivity.mContext)
+        mGoogleApiClient = new GoogleApiClient.Builder(MapsActivity.context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)

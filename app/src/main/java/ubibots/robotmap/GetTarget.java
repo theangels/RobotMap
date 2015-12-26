@@ -12,8 +12,8 @@ public class GetTarget {
     }
 
     public void requirePlace() {
-        final EditText mEditText = new EditText(MapsActivity.mContext);
-        AlertDialog.Builder mDialog = new AlertDialog.Builder(MapsActivity.mContext);
+        final EditText mEditText = new EditText(MapsActivity.context);
+        AlertDialog.Builder mDialog = new AlertDialog.Builder(MapsActivity.context);
         mDialog.setTitle("请输入目的地");
         mDialog.setView(mEditText);
         mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
