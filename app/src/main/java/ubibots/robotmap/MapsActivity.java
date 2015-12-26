@@ -107,7 +107,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     TimerTask getGPSTask = new TimerTask() {
         @Override
         public void run() {
-            // TODO Auto-generated method stub
             Message message = new Message();
             message.what = 1;
             getGPSHandler.sendMessage(message);
@@ -145,7 +144,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     TimerTask getTargetTask = new TimerTask() {
         @Override
         public void run() {
-            // TODO Auto-generated method stub
             Message message = new Message();
             message.what = 1;
             getTargetHandler.sendMessage(message);
