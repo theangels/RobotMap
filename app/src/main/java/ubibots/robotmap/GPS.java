@@ -10,6 +10,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.maps.model.LatLng;
 
 
 public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,LocationListener{

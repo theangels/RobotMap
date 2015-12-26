@@ -220,6 +220,7 @@ public class GetRoute {
                         .position(mPoint.get(i))
                         .title("" + i)));
             }
+            Flag.getRouteFinish = true;
         }
     }
 

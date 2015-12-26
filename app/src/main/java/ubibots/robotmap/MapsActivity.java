@@ -87,7 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 getTarget.requirePlace();
-                getDestTimer.schedule(getTargetTask, 1000, 3000);//推迟 间断
+                getDestTimer.schedule(getRouteTask, 1000, 3000);//推迟 间断
             }
         });
     }
@@ -148,16 +148,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 
-    TimerTask getTargetTask = new TimerTask() {
+    TimerTask getRouteTask = new TimerTask() {
         @Override
         public void run() {
             Message message = new Message();
             message.what = 1;
-            getTargetHandler.sendMessage(message);
+            getRouteHandler.sendMessage(message);
         }
     };
     /**不间断询问导航 3秒一次*/
-    Handler getTargetHandler = new Handler() {
+    Handler getRouteHandler = new Handler() {
         @Override
         public synchronized void handleMessage(Message msg) {
             // TODO Auto-generated method stub
@@ -170,15 +170,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     if (mGPS.getmCurrentLocation() != null && Flag.requireFinish) {
                         Flag.requireFinish = false;
-                        getTargetTask.cancel();
+                        getRouteTask.cancel();
                         LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
                         if (getTarget.getDest().compareTo("图书馆") == 0) {
                             LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
                             downloadTask.execute(getRoute.getDirectionsUrl(op, ed));
                             findTheWayTimer.schedule(findTheWayTask, 1000, 3000);//推迟 间断
-                            Flag.findTheWayStart = true;
                         }
                     }
+                    break;
             }
             super.handleMessage(msg);
         }
@@ -204,11 +204,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     /**Debug*/
                     System.out.println("Now reach the " + Flag.reachPoint + " Point");
 
-                    if(Flag.reachPoint==getRoute.getmPoint().size()){
-                        findTheWayTimer.cancel();
-                        Flag.reachPoint = -1;
+                    if(Flag.getRouteFinish) {
+                        if (Flag.reachPoint == getRoute.getmPoint().size()) {
+                            findTheWayTimer.cancel();
+                            Flag.reachPoint = -1;
+                        }
+                        LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
+                        LatLng ed = getRoute.getmPoint().get(Flag.reachPoint + 1);
+                        String howToNextPoint = "向北偏东: " + GetRoute.getAzimuth(op,ed) + "\n" + "距离: " + GetRoute.getDistance(op,ed);
+                        textView.setText(howToNextPoint);
                     }
-
+                    break;
             }
             super.handleMessage(msg);
         }
