@@ -134,7 +134,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //不间断获取GPS 3秒一次
     Handler getGPSHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg) {
+        public synchronized void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             // 要做的事情
 
@@ -160,21 +160,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //不间断询问导航 3秒一次
     Handler controlHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg) {
+        public synchronized void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             // 要做的事情
 
             /**Debug*/
             System.out.println(mControl.getDest());
-            if(mGPS.getmCurrentLocation()!=null && mControl.isRequireFinish()){
-                mControl.setRequireFinish(false);
+                if (mGPS.getmCurrentLocation() != null && mControl.isRequireFinish()) {
+                    mControl.setRequireFinish(false);
 
-                LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(),mGPS.getmCurrentLocation().getLongitude());
-                if(mControl.getDest().compareTo("图书馆") == 0) {
-                    LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
-                    mDownloadTask.execute(mGetRoute.getDirectionsUrl(op, ed));
+                    LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
+                    if (mControl.getDest().compareTo("图书馆") == 0) {
+                        LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
+                        mDownloadTask.execute(mGetRoute.getDirectionsUrl(op, ed));
+                    }
                 }
-            }
 
             super.handleMessage(msg);
         }

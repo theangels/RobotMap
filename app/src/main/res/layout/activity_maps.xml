@@ -15,13 +15,13 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Test"
+        android:text="开始导航"
         android:id="@+id/button"
         android:layout_gravity="center_horizontal|bottom" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="47dp"
+        android:layout_height="66dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/toNextPoint"
         android:layout_gravity="center_horizontal|top" />

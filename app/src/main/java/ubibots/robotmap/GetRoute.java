@@ -217,10 +217,10 @@ public class GetRoute {
             for (int i = 0; i < mPoint.size(); i++) {
                 mMarker.add(MapsActivity.mapsActivity.getmMap().addMarker(new MarkerOptions()
                         .position(mPoint.get(i))
-                        .title(""+i)));
+                        .title("" + i)));
                 System.out.println("Point" + (i) + ":" + mPoint.get(i));
-                if(i!=0)
-                    System.out.println("No." + (i) + "as for " + (i-1) + ": " + "Azimuth is " + GetRoute.getAzimuth(mPoint.get(i-1),mPoint.get(i)));
+                if (i != 0)
+                    System.out.println("No." + (i) + "as for " + (i - 1) + ": " + "Azimuth is " + GetRoute.getAzimuth(mPoint.get(i - 1), mPoint.get(i)));
             }
         }
     }
@@ -338,7 +338,16 @@ public class GetRoute {
         if (azimuth < 0) {
             azimuth = 360 + azimuth;
         }
-        //azimuth = Math.Round(azimuth, 0);
         return azimuth;
+    }
+
+    public static double getDistance(LatLng X, LatLng Y) {
+        double dis = Math.sqrt(Math.pow(
+                        (X.longitude - Y.longitude) * Math.PI * 6371229 * Math.cos((X.latitude + Y.latitude) / 2 * Math.PI / 180) / 180, 2
+                ) + Math.pow(
+                        (X.latitude - Y.latitude) * Math.PI * 6371229 / 180, 2
+                )
+        );
+        return dis;
     }
 }
