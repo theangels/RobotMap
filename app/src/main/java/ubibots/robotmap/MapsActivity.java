@@ -1,6 +1,7 @@
 package ubibots.robotmap;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Handler;
 import android.os.Message;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -37,6 +39,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GetRoute.DownloadTask downloadTask;
     private MarkerOptions markerOption;
     private Marker marker;
+    private TextView textView;
 
     public GoogleMap getGoogleMap() {
         return googleMap;
@@ -47,7 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         mapInit();
-        MarkerInit();
+        markerInit();
         GPSInit();
         getRouteInit();
         buttonInit();
@@ -89,13 +92,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void MarkerInit(){
+    private void markerInit(){
         markerOption = new MarkerOptions();
     }
 
     private void getTargetInit(){
         getTarget = new GetTarget();
+        textView = (TextView)findViewById(R.id.tonextpoint);
+        textView.setTextColor(Color.RED);
+        textView.setTextSize(15);
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -182,7 +189,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public void run() {
             Message message = new Message();
             message.what = 1;
-            getTargetHandler.sendMessage(message);
+            findTheWayHandler.sendMessage(message);
         }
     };
     /**不间断询问导航 3秒一次*/
@@ -201,6 +208,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         findTheWayTimer.cancel();
                         Flag.reachPoint = -1;
                     }
+
             }
             super.handleMessage(msg);
         }
