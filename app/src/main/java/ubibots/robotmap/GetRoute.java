@@ -26,6 +26,8 @@ import java.util.List;
 public class GetRoute {
 
     private ArrayList<LatLng> mPoint;
+
+    /**Debug*/
     private ArrayList<Marker> mMarker;
 
     public ArrayList<LatLng> getmPoint() {
@@ -207,6 +209,8 @@ public class GetRoute {
             // Drawing polyline in the Google Map for the i-th route
             MapsActivity.mapsActivity.getGoogleMap().addPolyline(lineOptions);
 
+
+            /**Debug*/
             for (int i = 0; i < mMarker.size(); i++) {
                 mMarker.get(i).remove();
             }

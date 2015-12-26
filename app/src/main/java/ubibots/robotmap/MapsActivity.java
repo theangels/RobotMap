@@ -195,9 +195,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 case 1:
 
                     /**Debug*/
-                    System.out.println(getTarget.getDest());
+                    System.out.println("Now reach the " + Flag.reachPoint + " Point");
 
-
+                    if(Flag.reachPoint==getRoute.getmPoint().size()){
+                        findTheWayTimer.cancel();
+                        Flag.reachPoint = -1;
+                    }
             }
             super.handleMessage(msg);
         }
