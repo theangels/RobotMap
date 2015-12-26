@@ -99,7 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        googleMap = googleMap;
+        this.googleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.setMyLocationEnabled(true);
     }
@@ -168,7 +168,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (getTarget.getDest().compareTo("图书馆") == 0) {
                             LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
                             downloadTask.execute(getRoute.getDirectionsUrl(op, ed));
-
+                            findTheWayTimer.schedule(findTheWayTask, 1000, 3000);//推迟 间断
                             Flag.findTheWayStart = true;
                         }
                     }
