@@ -20,7 +20,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
     public static MapsActivity mMapsActivity;
