@@ -210,10 +210,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             findTheWayTimer.cancel();
                             Flag.reachPoint = -1;
                         }
-                        LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
-                        LatLng ed = getRoute.getmPoint().get(Flag.reachPoint + 1);
-                        String howToNextPoint = "向北偏东: " + GetRoute.getAzimuth(op,ed) + "\n" + "距离: " + GetRoute.getDistance(op,ed);
-                        textView.setText(howToNextPoint);
+                        else {
+                            LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
+                            LatLng ed = getRoute.getmPoint().get(Flag.reachPoint + 1);
+                            double azimuth = GetRoute.getAzimuth(op, ed);
+                            double distance = GetRoute.getDistance(op, ed);
+                            if (distance <= 2)
+                                Flag.reachPoint++;
+                            String howToNextPoint = "向北偏东: " + String.format("%.2f", azimuth) + "\n" + "距离: " + String.format("%.2f", distance);
+                            textView.setText(howToNextPoint);
+                        }
                     }
                     break;
             }
