@@ -160,11 +160,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     /**Debug*/
                     System.out.println(mGetTarget.getDest());
 
+                    Flag.requireFinish = false;
+                    getTargetTask.cancel();
                     if (mGPS.getmCurrentLocation() != null && Flag.requireFinish) {
-                        Flag.requireFinish = false;
                         LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
                         if (mGetTarget.getDest().compareTo("图书馆") == 0) {
-                            getTargetTask.cancel();
                             LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
                             mDownloadTask.execute(mGetRoute.getDirectionsUrl(op, ed));
                         }
