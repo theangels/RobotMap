@@ -23,9 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by TheAngels on 2015/11/28.
- */
 public class GetRoute {
 
     private ArrayList<LatLng> mPoint;
@@ -36,7 +33,7 @@ public class GetRoute {
     }
 
     GetRoute() {
-        mMarker = new ArrayList<Marker>();
+        mMarker = new ArrayList<>();
     }
 
     /**
