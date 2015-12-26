@@ -168,7 +168,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     /**Debug*/
                     System.out.println(getTarget.getDest());
 
-                    if (mGPS.getmCurrentLocation() != null && Flag.requireFinish) {
+                    if (Flag.getGPS && Flag.requireFinish) {
+                        Flag.getGPS = false;
                         Flag.requireFinish = false;
                         getRouteTask.cancel();
                         LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
