@@ -4,9 +4,6 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.widget.EditText;
 
-/**
- * Created by TheAngels on 2015/12/23.
- */
 public class GetTarget {
     private String dest = null;
 

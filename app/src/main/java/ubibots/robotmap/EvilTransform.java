@@ -5,15 +5,9 @@ import android.location.Location;
 public class EvilTransform {
 
     private static double pi = 3.14159265358979324;
-    private static double a = 6378245.0;
-    private static double ee = 0.00669342162296594323;
 
     private static boolean outOfChina(double lat, double lon) {
-        if (lon < 72.004 || lon > 137.8347)
-            return true;
-        if (lat < 0.8293 || lat > 55.8271)
-            return true;
-        return false;
+        return lon < 72.004 || lon > 137.8347 || lat < 0.8293 || lat > 55.8271;
     }
 
     private static double transformLat(double x, double y) {
@@ -34,9 +28,6 @@ public class EvilTransform {
 
     /**
      * World Geodetic System ==> Mars Geodetic System
-     *
-     * @param initLocation
-     * @param initLocation mglat,mglon
      */
     public static Location TransForm(Location initLocation) {
         Location ret = new Location("");
@@ -51,8 +42,10 @@ public class EvilTransform {
             double dLon = transformLon(wgLon - 105.0, wgLat - 35.0);
             double radLat = wgLat / 180.0 * pi;
             double magic = Math.sin(radLat);
+            double ee = 0.00669342162296594323;
             magic = 1 - ee * magic * magic;
             double sqrtMagic = Math.sqrt(magic);
+            double a = 6378245.0;
             dLat = (dLat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * pi);
             dLon = (dLon * 180.0) / (a / sqrtMagic * Math.cos(radLat) * pi);
             ret.setLatitude(wgLat + dLat);

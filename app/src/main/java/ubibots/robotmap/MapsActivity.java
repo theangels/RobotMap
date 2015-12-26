@@ -23,8 +23,8 @@ import java.util.TimerTask;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
-    public MapsActivity mMapsActivity;
-    public Context mContext;
+    public static MapsActivity mMapsActivity;
+    public static Context mContext;
 
     private GoogleMap mGoogleMap;
     private GPS mGPS;
@@ -37,6 +37,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GetRoute.DownloadTask mDownloadTask;
     private MarkerOptions mMarkerOption;
     private Marker mMarker;
+
+    public GoogleMap getmGoogleMap() {
+        return mGoogleMap;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

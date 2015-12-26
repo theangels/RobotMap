@@ -12,19 +12,11 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 
-/**
- * Created by TheAngels on 2015/12/5.
- */
 public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,LocationListener{
 
     private Location mCurrentLocation;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-
-    /** Debug */
-    public void setmCurrentLocation(Location mCurrentLocation) {
-        this.mCurrentLocation = mCurrentLocation;
-    }
 
     public Location getmCurrentLocation() {
         return mCurrentLocation;
@@ -56,7 +48,7 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,Loca
             }
         }
         catch (Exception ex){
-            System.out.println(ex);
+            System.err.println("Get GPS error!");
         }
     }
 
