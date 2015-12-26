@@ -45,6 +45,7 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,Loca
             mCurrentLocation = EvilTransform.TransForm(LocationServices.FusedLocationApi.getLastLocation(
                     mGoogleApiClient));
             if (mLocationRequest != null) {
+                Flag.getGPS = true;
                 startLocationUpdates();
             }
         }
@@ -81,10 +82,9 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,Loca
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = EvilTransform.TransForm(location);
-        updateUI();
-    }
+        Flag.getGPS = true;
 
-    private void updateUI() {
+        /**Debug*/
         System.out.println("Current GPS is " + mCurrentLocation);
     }
 }
