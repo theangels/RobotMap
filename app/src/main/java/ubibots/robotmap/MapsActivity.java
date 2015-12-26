@@ -23,30 +23,25 @@ import java.util.TimerTask;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
-    public static MapsActivity mapsActivity;
-    public static Context mContext;
-    private GoogleMap mMap;
-    private GoogleMapOptions options;
-    private MapFragment mapFragment;
+    public MapsActivity mMapsActivity;
+    public Context mContext;
+
+    private GoogleMap mGoogleMap;
     private GPS mGPS;
+    private GetTarget mGetTarget;
+    private GetRoute mGetRoute;
+
     private final Timer mGetGPSTimer = new Timer();
     private final Timer mGetDestTimer = new Timer();
-    private GetRoute mGetRoute;
+
     private GetRoute.DownloadTask mDownloadTask;
-    private Button mButton;
     private MarkerOptions mMarkerOption;
     private Marker mMarker;
-    private GetTarget mGetTarget;
-
-    public GoogleMap getmMap() {
-        return mMap;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the MapFragment and get notified when the map is ready to be used.
         MapInit();
         MarkerInit();
         GPSInit();
@@ -56,31 +51,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void MapInit(){
-        mapsActivity = this;
+        mMapsActivity = this;
         mContext = this;
-        options = new GoogleMapOptions()
+        GoogleMapOptions options = new GoogleMapOptions()
                 .mapType(GoogleMap.MAP_TYPE_NORMAL)
                 .compassEnabled(true)
                 .rotateGesturesEnabled(true)
                 .tiltGesturesEnabled(true);
-        mapFragment = (MapFragment) getFragmentManager()
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        mapFragment.newInstance(options);
+        MapFragment.newInstance(options);
     }
 
     private void GPSInit(){
         mGPS = new GPS();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                Message message = new Message();
-                message.what = 1;
-                getGPSHandler.sendMessage(message);
-            }
-        };
-        mGetGPSTimer.schedule(task, 1000, 3000);//推迟 间断
+        mGetGPSTimer.schedule(getGPSTask, 1000, 3000);//推迟 间断
     }
 
     private void GetRouteInit(){
@@ -89,11 +75,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void ButtonInit(){
-        mButton = (Button)findViewById(R.id.button);
+        Button mButton = (Button) findViewById(R.id.button);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mGetTarget.requirePlace();
+                mGetDestTimer.schedule(getTargetTask, 1000, 3000);//推迟 间断
             }
         });
     }
@@ -104,78 +91,84 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void getTargetInit(){
         mGetTarget = new GetTarget();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                Message message = new Message();
-                message.what = 1;
-                getTargetHandler.sendMessage(message);
-            }
-        };
-        mGetDestTimer.schedule(task, 1000, 3000);//推迟 间断
-    }
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.setMyLocationEnabled(true);
     }
 
-    //不间断获取GPS 3秒一次
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mGoogleMap = googleMap;
+        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mGoogleMap.setMyLocationEnabled(true);
+    }
+
+    TimerTask getGPSTask = new TimerTask() {
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            Message message = new Message();
+            message.what = 1;
+            getGPSHandler.sendMessage(message);
+        }
+    };
+    /**不间断获取GPS 3秒一次*/
     Handler getGPSHandler = new Handler() {
         @Override
         public synchronized void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             // 要做的事情
+            switch (msg.what) {
+                case 1:
 
-            /**Debug*/
-            System.out.println(mGPS.getmCurrentLocation());
+                    /**Debug*/
+                    System.out.println(mGPS.getmCurrentLocation());
 
-            if(mGPS.getmCurrentLocation() != null){
-                Location mLocation = mGPS.getmCurrentLocation();
-                LatLng initial = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-                if(mMarker!=null){
-                    mMarker.remove();
-                }
-                mMarkerOption
-                        .position(initial)
-                        .title("Marker in Initial");
-                mMarker = MapsActivity.mapsActivity.getmMap().addMarker(mMarkerOption);
+                    if (mGPS.getmCurrentLocation() != null) {
+                        Location mLocation = mGPS.getmCurrentLocation();
+                        LatLng initial = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+                        if (mMarker != null) {
+                            mMarker.remove();
+                        }
+                        mMarkerOption
+                                .position(initial)
+                                .title("Marker in Initial");
+                        mMarker = mGoogleMap.addMarker(mMarkerOption);
+                    }
+                    break;
             }
-
             super.handleMessage(msg);
         }
     };
 
-    //不间断询问导航 3秒一次
+    TimerTask getTargetTask = new TimerTask() {
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            Message message = new Message();
+            message.what = 1;
+            getTargetHandler.sendMessage(message);
+        }
+    };
+    /**不间断询问导航 3秒一次*/
     Handler getTargetHandler = new Handler() {
         @Override
         public synchronized void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             // 要做的事情
+            switch (msg.what) {
+                case 1:
 
-            /**Debug*/
-            System.out.println(mGetTarget.getDest());
-                if (mGPS.getmCurrentLocation() != null && Flag.requireFinish) {
-                    Flag.requireFinish = false;
+                    /**Debug*/
+                    System.out.println(mGetTarget.getDest());
 
-                    LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
-                    if (mGetTarget.getDest().compareTo("图书馆") == 0) {
-                        LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
-                        mDownloadTask.execute(mGetRoute.getDirectionsUrl(op, ed));
+                    if (mGPS.getmCurrentLocation() != null && Flag.requireFinish) {
+                        Flag.requireFinish = false;
+                        LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
+                        if (mGetTarget.getDest().compareTo("图书馆") == 0) {
+                            getTargetTask.cancel();
+                            LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
+                            mDownloadTask.execute(mGetRoute.getDirectionsUrl(op, ed));
+                        }
                     }
-                }
-
+            }
             super.handleMessage(msg);
         }
     };
