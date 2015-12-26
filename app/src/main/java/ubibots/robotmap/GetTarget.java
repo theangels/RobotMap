@@ -9,18 +9,9 @@ import android.widget.EditText;
  */
 public class GetTarget {
     private String dest = null;
-    private boolean requireFinish = false;
 
     public String getDest() {
         return dest;
-    }
-
-    public boolean isRequireFinish() {
-        return requireFinish;
-    }
-
-    public void setRequireFinish(boolean isRequireFinish) {
-        this.requireFinish = isRequireFinish;
     }
 
     public void requirePlace() {
@@ -32,7 +23,7 @@ public class GetTarget {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dest = mEditText.getText().toString();
-                        requireFinish = true;
+                        Flag.requireFinish = true;
                     }
                 });
         mDialog.setNegativeButton("取消", null);
