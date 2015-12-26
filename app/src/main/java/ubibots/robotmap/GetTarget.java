@@ -7,7 +7,7 @@ import android.widget.EditText;
 /**
  * Created by TheAngels on 2015/12/23.
  */
-public class Control {
+public class GetTarget {
     private String dest = null;
     private boolean requireFinish = false;
 

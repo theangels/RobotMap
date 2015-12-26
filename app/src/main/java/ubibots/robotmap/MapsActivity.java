@@ -36,7 +36,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button mButton;
     private MarkerOptions mMarkerOption;
     private Marker mMarker;
-    private Control mControl;
+    private GetTarget mGetTarget;
 
     public GoogleMap getmMap() {
         return mMap;
@@ -52,7 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GPSInit();
         GetRouteInit();
         ButtonInit();
-        ControlInit();
+        getTargetInit();
     }
 
     private void MapInit(){
@@ -93,7 +93,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mControl.requirePlace();
+                mGetTarget.requirePlace();
             }
         });
     }
@@ -102,15 +102,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMarkerOption = new MarkerOptions();
     }
 
-    private void ControlInit(){
-        mControl = new Control();
+    private void getTargetInit(){
+        mGetTarget = new GetTarget();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 // TODO Auto-generated method stub
                 Message message = new Message();
                 message.what = 1;
-                controlHandler.sendMessage(message);
+                getTargetHandler.sendMessage(message);
             }
         };
         mGetDestTimer.schedule(task, 1000, 3000);//推迟 间断
@@ -158,19 +158,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     };
 
     //不间断询问导航 3秒一次
-    Handler controlHandler = new Handler() {
+    Handler getTargetHandler = new Handler() {
         @Override
         public synchronized void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             // 要做的事情
 
             /**Debug*/
-            System.out.println(mControl.getDest());
-                if (mGPS.getmCurrentLocation() != null && mControl.isRequireFinish()) {
-                    mControl.setRequireFinish(false);
+            System.out.println(mGetTarget.getDest());
+                if (mGPS.getmCurrentLocation() != null && mGetTarget.isRequireFinish()) {
+                    mGetTarget.setRequireFinish(false);
 
                     LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
-                    if (mControl.getDest().compareTo("图书馆") == 0) {
+                    if (mGetTarget.getDest().compareTo("图书馆") == 0) {
                         LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
                         mDownloadTask.execute(mGetRoute.getDirectionsUrl(op, ed));
                     }
