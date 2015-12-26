@@ -46,15 +46,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        MapInit();
+        mapInit();
         MarkerInit();
         GPSInit();
-        GetRouteInit();
-        ButtonInit();
+        getRouteInit();
+        buttonInit();
         getTargetInit();
     }
 
-    private void MapInit(){
+    private void mapInit(){
         mMapsActivity = this;
         mContext = this;
         GoogleMapOptions options = new GoogleMapOptions()
@@ -73,12 +73,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mGetGPSTimer.schedule(getGPSTask, 1000, 3000);//推迟 间断
     }
 
-    private void GetRouteInit(){
+    private void getRouteInit(){
         mGetRoute = new GetRoute();
         mDownloadTask = mGetRoute.new DownloadTask();
     }
 
-    private void ButtonInit(){
+    private void buttonInit(){
         Button mButton = (Button) findViewById(R.id.button);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
