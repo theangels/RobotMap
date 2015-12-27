@@ -83,8 +83,5 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,Loca
     public void onLocationChanged(Location location) {
         mCurrentLocation = EvilTransform.TransForm(location);
         Flag.getGPS = true;
-
-        /**Debug*/
-        System.out.println("Current GPS is " + mCurrentLocation);
     }
 }

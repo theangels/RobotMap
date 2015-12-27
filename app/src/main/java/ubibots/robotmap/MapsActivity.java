@@ -127,10 +127,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // 要做的事情
             switch (msg.what) {
                 case 1:
-
-                    /**Debug*/
+                    /**Debug
                     System.out.println(mGPS.getmCurrentLocation());
-
+                    */
                     if (mGPS.getmCurrentLocation() != null) {
                         Location mLocation = mGPS.getmCurrentLocation();
                         LatLng initial = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
@@ -164,10 +163,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // 要做的事情
             switch (msg.what) {
                 case 1:
-
-                    /**Debug*/
+                    /**Debug
                     System.out.println(getTarget.getDest());
-
+                    */
                     if (Flag.getGPS && Flag.requireFinish) {
                         Flag.getGPS = false;
                         Flag.requireFinish = false;
@@ -201,10 +199,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // 要做的事情
             switch (msg.what) {
                 case 1:
-
-                    /**Debug*/
-                    System.out.println("Now reach the " + Flag.reachPoint + " Point");
-
                     if(Flag.getRouteFinish) {
                         if (Flag.reachPoint == getRoute.getmPoint().size()) {
                             findTheWayTimer.cancel();
@@ -215,9 +209,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             LatLng ed = getRoute.getmPoint().get(Flag.reachPoint + 1);
                             double azimuth = GetRoute.getAzimuth(op, ed);
                             double distance = GetRoute.getDistance(op, ed);
-                            if (distance <= 2)
+                            if (distance <= 5)
                                 Flag.reachPoint++;
-                            String howToNextPoint = "向北偏东: " + String.format("%.2f", azimuth) + "\n" + "距离: " + String.format("%.2f", distance);
+                            String howToNextPoint = "现在到达第 " + Flag.reachPoint + "个点,距离下一个点" + "\n" + "向北偏东: " + String.format("%.2f", azimuth) + "\n" + "距离: " + String.format("%.2f", distance);
                             textView.setText(howToNextPoint);
                         }
                     }
