@@ -73,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void GPSInit(){
         mGPS = new GPS();
-        getGPSTimer.schedule(getGPSTask, 1000, 3000);//推迟 间断
+        getGPSTimer.schedule(getGPSTask, 1000, 2000);//推迟 间断
     }
 
     private void getRouteInit(){
@@ -87,7 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 getTarget.requirePlace();
-                getDestTimer.schedule(getRouteTask, 1000, 3000);//推迟 间断
+                getDestTimer.schedule(getRouteTask, 1000, 2000);//推迟 间断
             }
         });
     }
@@ -174,7 +174,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (getTarget.getDest().compareTo("图书馆") == 0) {
                             LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
                             downloadTask.execute(getRoute.getDirectionsUrl(op, ed));
-                            findTheWayTimer.schedule(findTheWayTask, 1000, 3000);//推迟 间断
+                            findTheWayTimer.schedule(findTheWayTask, 1000, 2000);//推迟 间断
                         }
                     }
                     break;
