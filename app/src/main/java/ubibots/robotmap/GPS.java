@@ -10,6 +10,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 
 
@@ -47,6 +48,9 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,Loca
             if (mLocationRequest != null) {
                 Flag.getGPS = true;
                 startLocationUpdates();
+                LatLng start = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                MapsActivity.mapsActivity.getGoogleMap().moveCamera(CameraUpdateFactory.newLatLng(start));
+                MapsActivity.mapsActivity.getGoogleMap().animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
             }
         }
         catch (Exception ex){
