@@ -225,12 +225,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             switch (msg.what) {
                 case 1:
                     if (Flag.getRouteFinish) {
-                        if (Flag.reachPoint == route.getmPoint().size()) {
+                        if (Flag.reachPoint == route.getNode().size()) {
                             findTheWayTimer.cancel();
                             Flag.reachPoint = -1;
                         } else {
                             LatLng op = new LatLng(mGPS.getCurrentLocation().getLatitude(), mGPS.getCurrentLocation().getLongitude());
-                            LatLng ed = route.getmPoint().get(Flag.reachPoint + 1);
+                            LatLng ed = route.getNode().get(Flag.reachPoint + 1);
                             double azimuth = Route.getAzimuth(op, ed) - direction.getDirection();
                             double distance = Route.getDistance(op, ed);
                             if (distance <= 5)

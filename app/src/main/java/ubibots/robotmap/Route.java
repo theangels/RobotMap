@@ -25,17 +25,17 @@ import java.util.List;
 
 public class Route {
 
-    private ArrayList<LatLng> mPoint;
+    private ArrayList<LatLng> node;
 
     /**Debug*/
-    private ArrayList<Marker> mMarker;
-
-    public ArrayList<LatLng> getmPoint() {
-        return mPoint;
-    }
+    private ArrayList<Marker> marker;
 
     Route() {
-        mMarker = new ArrayList<>();
+        marker = new ArrayList<>();
+    }
+
+    public ArrayList<LatLng> getNode() {
+        return node;
     }
 
     /**
@@ -178,7 +178,7 @@ public class Route {
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
             ArrayList<LatLng> points = null;
             PolylineOptions lineOptions = null;
-            mPoint = new ArrayList<LatLng>();
+            node = new ArrayList<LatLng>();
             /***/
             // Traversing through all the routes
             for (int i = 0; i < result.size(); i++) {
@@ -195,7 +195,7 @@ public class Route {
                     double lat = Double.parseDouble(point.get("lat"));
                     double lng = Double.parseDouble(point.get("lng"));
                     LatLng position = new LatLng(lat, lng);
-                    mPoint.add(position);
+                    node.add(position);
                     points.add(position);
                 }
 
@@ -211,13 +211,13 @@ public class Route {
 
 
             /**Debug*/
-            for (int i = 0; i < mMarker.size(); i++) {
-                mMarker.get(i).remove();
+            for (int i = 0; i < marker.size(); i++) {
+                marker.get(i).remove();
             }
-            mMarker.clear();
-            for (int i = 0; i < mPoint.size(); i++) {
-                mMarker.add(MapsActivity.mapsActivity.getGoogleMap().addMarker(new MarkerOptions()
-                        .position(mPoint.get(i))
+            marker.clear();
+            for (int i = 0; i < node.size(); i++) {
+                marker.add(MapsActivity.mapsActivity.getGoogleMap().addMarker(new MarkerOptions()
+                        .position(node.get(i))
                         .title("" + i)));
             }
             Flag.getRouteFinish = true;
