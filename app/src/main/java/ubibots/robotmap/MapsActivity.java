@@ -29,14 +29,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap googleMap;
     private GPS mGPS;
-    private GetTarget getTarget;
-    private GetRoute getRoute;
+    private Target target;
+    private Route route;
+    private Direction direction;
 
     private final Timer getGPSTimer = new Timer();
     private final Timer getDestTimer = new Timer();
     private final Timer findTheWayTimer = new Timer();
 
-    private GetRoute.DownloadTask downloadTask;
+    private Route.DownloadTask downloadTask;
     private MarkerOptions markerOption;
     private Marker marker;
     private TextView textView;
@@ -55,6 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         getRouteInit();
         buttonInit();
         getTargetInit();
+        getDirectionInit();
     }
 
     private void mapInit(){
@@ -77,8 +79,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void getRouteInit(){
-        getRoute = new GetRoute();
-        downloadTask = getRoute.new DownloadTask();
+        route = new Route();
+        downloadTask = route.new DownloadTask();
     }
 
     private void buttonInit(){
@@ -86,7 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getTarget.requirePlace();
+                target.requirePlace();
                 if(!Flag.launchRequire) {
                     getDestTimer.schedule(getRouteTask, 1000, 2000);//推迟 间断
                     Flag.launchRequire = true;
@@ -100,12 +102,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void getTargetInit(){
-        getTarget = new GetTarget();
+        target = new Target();
         textView = (TextView)findViewById(R.id.tonextpoint);
         textView.setTextColor(Color.RED);
         textView.setTextSize(15);
     }
 
+    private void getDirectionInit(){
+        direction = new Direction();
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -133,8 +138,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     /**Debug
                     System.out.println(mGPS.getmCurrentLocation());
                     */
-                    if (mGPS.getmCurrentLocation() != null) {
-                        Location mLocation = mGPS.getmCurrentLocation();
+                    if (mGPS.getCurrentLocation() != null) {
+                        Location mLocation = mGPS.getCurrentLocation();
                         LatLng initial = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
                         if (marker != null) {
                             marker.remove();
@@ -167,15 +172,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             switch (msg.what) {
                 case 1:
                     /**Debug
-                    System.out.println(getTarget.getDest());
+                    System.out.println(target.getDest());
                     */
                     if (Flag.getGPS && Flag.requireFinish) {
                         Flag.getGPS = false;
                         Flag.requireFinish = false;
-                        LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
-                        if (getTarget.getDest().compareTo("图书馆") == 0) {
+                        LatLng op = new LatLng(mGPS.getCurrentLocation().getLatitude(), mGPS.getCurrentLocation().getLongitude());
+                        if (target.getDest().compareTo("图书馆") == 0) {
                             LatLng ed = new LatLng(30.3285390, 120.1559760);//图书馆
-                            downloadTask.execute(getRoute.getDirectionsUrl(op, ed));
+                            downloadTask.execute(route.getDirectionsUrl(op, ed));
                             findTheWayTimer.schedule(findTheWayTask, 1000, 2000);//推迟 间断
                         }
                         getRouteTask.cancel();
@@ -204,15 +209,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             switch (msg.what) {
                 case 1:
                     if(Flag.getRouteFinish) {
-                        if (Flag.reachPoint == getRoute.getmPoint().size()) {
+                        if (Flag.reachPoint == route.getmPoint().size()) {
                             findTheWayTimer.cancel();
                             Flag.reachPoint = -1;
                         }
                         else {
-                            LatLng op = new LatLng(mGPS.getmCurrentLocation().getLatitude(), mGPS.getmCurrentLocation().getLongitude());
-                            LatLng ed = getRoute.getmPoint().get(Flag.reachPoint + 1);
-                            double azimuth = GetRoute.getAzimuth(op, ed);
-                            double distance = GetRoute.getDistance(op, ed);
+                            LatLng op = new LatLng(mGPS.getCurrentLocation().getLatitude(), mGPS.getCurrentLocation().getLongitude());
+                            LatLng ed = route.getmPoint().get(Flag.reachPoint + 1);
+                            double azimuth = Route.getAzimuth(op, ed);
+                            double distance = Route.getDistance(op, ed);
                             if (distance <= 5)
                                 Flag.reachPoint++;
                             String howToNextPoint = "现在到达第 " + Flag.reachPoint + "个点,距离下一个点" + "\n" + "向北偏东: " + String.format("%.2f", azimuth) + "\n" + "距离: " + String.format("%.2f", distance);

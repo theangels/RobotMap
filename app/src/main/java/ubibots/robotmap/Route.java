@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class GetRoute {
+public class Route {
 
     private ArrayList<LatLng> mPoint;
 
@@ -34,7 +34,7 @@ public class GetRoute {
         return mPoint;
     }
 
-    GetRoute() {
+    Route() {
         mMarker = new ArrayList<>();
     }
 

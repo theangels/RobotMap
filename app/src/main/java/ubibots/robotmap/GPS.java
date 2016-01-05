@@ -16,24 +16,24 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,LocationListener{
 
-    private Location mCurrentLocation;
-    private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
+    private Location currentLocation;
+    private GoogleApiClient googleApiClient;
+    private LocationRequest locationRequest;
 
-    public Location getmCurrentLocation() {
-        return mCurrentLocation;
+    public Location getCurrentLocation() {
+        return currentLocation;
     }
 
     public GPS() {
-        mCurrentLocation = null;
-        mLocationRequest = null;
+        currentLocation = null;
+        locationRequest = null;
         buildGoogleApiClient();
         createLocationRequest();
-        mGoogleApiClient.connect();
+        googleApiClient.connect();
     }
 
     protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(MapsActivity.context)
+        googleApiClient = new GoogleApiClient.Builder(MapsActivity.context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -43,12 +43,12 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,Loca
     @Override
     public void onConnected(Bundle connectionHint) {
         try {
-            mCurrentLocation = EvilTransform.TransForm(LocationServices.FusedLocationApi.getLastLocation(
-                    mGoogleApiClient));
-            if (mLocationRequest != null) {
+            currentLocation = EvilTransform.TransForm(LocationServices.FusedLocationApi.getLastLocation(
+                    googleApiClient));
+            if (locationRequest != null) {
                 Flag.getGPS = true;
                 startLocationUpdates();
-                LatLng start = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                LatLng start = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                 MapsActivity.mapsActivity.getGoogleMap().moveCamera(CameraUpdateFactory.newLatLng(start));
                 MapsActivity.mapsActivity.getGoogleMap().animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
             }
@@ -72,20 +72,20 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,Loca
      * it can't use. Once the long-running work is done, set the fastest interval back to a fast value.
      */
     protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
     protected void startLocationUpdates() {
         LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
+                googleApiClient, locationRequest, this);
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        mCurrentLocation = EvilTransform.TransForm(location);
+        currentLocation = EvilTransform.TransForm(location);
         Flag.getGPS = true;
     }
 }

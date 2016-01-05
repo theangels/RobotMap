@@ -26,4 +26,11 @@
         android:id="@+id/tonextpoint"
         android:layout_gravity="center_horizontal|top" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/direction"
+        android:layout_gravity="center_horizontal|bottom" />
+
 </FrameLayout>
