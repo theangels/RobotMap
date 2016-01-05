@@ -54,10 +54,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapInit();
         markerInit();
         GPSInit();
-        getRouteInit();
+        routeInit();
         buttonInit();
-        getTargetInit();
-        getDirectionInit();
+        targetInit();
+        directionInit();
     }
 
     private void mapInit() {
@@ -79,7 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GPSTimer.schedule(GPSTask, 1000, 40);//推迟 间断
     }
 
-    private void getRouteInit() {
+    private void routeInit() {
         route = new Route();
     }
 
@@ -101,7 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerOption = new MarkerOptions();
     }
 
-    private void getTargetInit() {
+    private void targetInit() {
         target = new Target();
         textView = (TextView) findViewById(R.id.tonextpoint);
         textView.setGravity(Gravity.LEFT);
@@ -110,7 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         findTheWayTimer.schedule(findTheWayTask, 1000, 40);//推迟 间断
     }
 
-    private void getDirectionInit() {
+    private void directionInit() {
         direction = new Direction();
         direction.getSensorManager().registerListener(direction.getSensorLintener(), direction.getAccelerometer(), Sensor.TYPE_ACCELEROMETER);
         direction.getSensorManager().registerListener(direction.getSensorLintener(), direction.getMagnetic(), Sensor.TYPE_MAGNETIC_FIELD);

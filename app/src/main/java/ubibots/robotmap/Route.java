@@ -27,9 +27,7 @@ public class Route {
 
     private ArrayList<LatLng> mPoint;
 
-    /**
-     * Debug
-     */
+    /**Debug*/
     private ArrayList<Marker> mMarker;
 
     public ArrayList<LatLng> getmPoint() {
