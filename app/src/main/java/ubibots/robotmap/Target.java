@@ -11,6 +11,10 @@ public class Target {
         return dest;
     }
 
+    public void setDest(String dest) {
+        this.dest = dest;
+    }
+
     public void requirePlace() {
         final EditText editText = new EditText(MapsActivity.context);
         AlertDialog.Builder dialog = new AlertDialog.Builder(MapsActivity.context);

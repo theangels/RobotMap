@@ -1,12 +1,9 @@
 package ubibots.robotmap;
 
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.view.Gravity;
-import android.widget.TextView;
 
 public class Direction {
     private SensorManager sensorManager;
@@ -18,11 +15,6 @@ public class Direction {
 
     private float[] accelerometerValues;
     private float[] magneticFieldValues;
-
-    /**
-     * Debug
-     */
-    private TextView textView;
 
     public SensorManager getSensorManager() {
         return sensorManager;
@@ -47,19 +39,7 @@ public class Direction {
     Direction() {
         accelerometerValues = new float[3];
         magneticFieldValues = new float[3];
-        /**Debug*/
-        textViewInit();
         sensorManagerInit();
-    }
-
-    /**
-     * Debug
-     */
-    private void textViewInit() {
-        textView = (TextView) MapsActivity.mapsActivity.findViewById(R.id.direction);
-        textView.setGravity(Gravity.LEFT);
-        textView.setTextColor(Color.RED);
-        textView.setTextSize(15);
     }
 
     private void calculateOrientation() {
@@ -68,8 +48,6 @@ public class Direction {
         SensorManager.getRotationMatrix(R, null, accelerometerValues, magneticFieldValues);
         SensorManager.getOrientation(R, values);
         direction = values[0] = (float) Math.toDegrees(values[0]);
-        String view = "现方位角为北偏东" + String.format("%.2f", values[0]) + "°";
-        textView.setText(view);
     }
 
     private void sensorManagerInit() {
