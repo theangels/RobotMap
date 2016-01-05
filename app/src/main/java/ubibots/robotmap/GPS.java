@@ -14,7 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 
 
-public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,LocationListener{
+public class GPS implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
 
     private Location currentLocation;
     private GoogleApiClient googleApiClient;
@@ -52,8 +52,7 @@ public class GPS implements ConnectionCallbacks, OnConnectionFailedListener,Loca
                 MapsActivity.mapsActivity.getGoogleMap().moveCamera(CameraUpdateFactory.newLatLng(start));
                 MapsActivity.mapsActivity.getGoogleMap().animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
             }
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             System.err.println("Get GPS error!");
         }
     }

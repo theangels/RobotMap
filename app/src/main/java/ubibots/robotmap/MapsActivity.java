@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public static MapsActivity mapsActivity;
     public static Context context;
@@ -61,7 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         getDirectionInit();
     }
 
-    private void mapInit(){
+    private void mapInit() {
         mapsActivity = this;
         context = this;
         GoogleMapOptions options = new GoogleMapOptions()
@@ -75,23 +75,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapFragment.newInstance(options);
     }
 
-    private void GPSInit(){
+    private void GPSInit() {
         mGPS = new GPS();
         getGPSTimer.schedule(getGPSTask, 1000, 2000);//推迟 间断
     }
 
-    private void getRouteInit(){
+    private void getRouteInit() {
         route = new Route();
         downloadTask = route.new DownloadTask();
     }
 
-    private void buttonInit(){
+    private void buttonInit() {
         Button mButton = (Button) findViewById(R.id.button);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 target.requirePlace();
-                if(!Flag.launchRequire) {
+                if (!Flag.launchRequire) {
                     getDestTimer.schedule(getRouteTask, 1000, 2000);//推迟 间断
                     Flag.launchRequire = true;
                 }
@@ -99,19 +99,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void markerInit(){
+    private void markerInit() {
         markerOption = new MarkerOptions();
     }
 
-    private void getTargetInit(){
+    private void getTargetInit() {
         target = new Target();
-        textView = (TextView)findViewById(R.id.tonextpoint);
+        textView = (TextView) findViewById(R.id.tonextpoint);
         textView.setGravity(Gravity.LEFT);
         textView.setTextColor(Color.RED);
         textView.setTextSize(15);
     }
 
-    private void getDirectionInit(){
+    private void getDirectionInit() {
         direction = new Direction();
         direction.getSensorManager().registerListener(direction.getSensorLintener(), direction.getAccelerometer(), Sensor.TYPE_ACCELEROMETER);
         direction.getSensorManager().registerListener(direction.getSensorLintener(), direction.getMagnetic(), Sensor.TYPE_MAGNETIC_FIELD);
@@ -131,7 +131,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public synchronized void onPause(){
+    public synchronized void onPause() {
         super.onPause();
         direction.getSensorManager().unregisterListener(direction.getSensorLintener());
     }
@@ -144,7 +144,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             getGPSHandler.sendMessage(message);
         }
     };
-    /**不间断获取GPS 3秒一次*/
+    /**
+     * 不间断获取GPS 3秒一次
+     */
     Handler getGPSHandler = new Handler() {
         @Override
         public synchronized void handleMessage(Message msg) {
@@ -153,8 +155,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             switch (msg.what) {
                 case 1:
                     /**Debug
-                    System.out.println(mGPS.getmCurrentLocation());
-                    */
+                     System.out.println(mGPS.getmCurrentLocation());
+                     */
                     if (mGPS.getCurrentLocation() != null) {
                         Location mLocation = mGPS.getCurrentLocation();
                         LatLng initial = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
@@ -180,7 +182,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             getRouteHandler.sendMessage(message);
         }
     };
-    /**不间断询问导航 3秒一次*/
+    /**
+     * 不间断询问导航 3秒一次
+     */
     Handler getRouteHandler = new Handler() {
         @Override
         public synchronized void handleMessage(Message msg) {
@@ -189,8 +193,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             switch (msg.what) {
                 case 1:
                     /**Debug
-                    System.out.println(target.getDest());
-                    */
+                     System.out.println(target.getDest());
+                     */
                     if (Flag.getGPS && Flag.requireFinish) {
                         Flag.getGPS = false;
                         Flag.requireFinish = false;
@@ -217,7 +221,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findTheWayHandler.sendMessage(message);
         }
     };
-    /**不间断询问导航 3秒一次*/
+    /**
+     * 不间断询问导航 3秒一次
+     */
     Handler findTheWayHandler = new Handler() {
         @Override
         public synchronized void handleMessage(Message msg) {
@@ -225,21 +231,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // 要做的事情
             switch (msg.what) {
                 case 1:
-                    if(Flag.getRouteFinish) {
+                    if (Flag.getRouteFinish) {
                         if (Flag.reachPoint == route.getmPoint().size()) {
                             findTheWayTimer.cancel();
                             Flag.reachPoint = -1;
-                        }
-                        else {
+                        } else {
                             LatLng op = new LatLng(mGPS.getCurrentLocation().getLatitude(), mGPS.getCurrentLocation().getLongitude());
                             LatLng ed = route.getmPoint().get(Flag.reachPoint + 1);
-                            double azimuth = Route.getAzimuth(op, ed)-direction.getDirection();
+                            double azimuth = Route.getAzimuth(op, ed) - direction.getDirection();
                             double distance = Route.getDistance(op, ed);
                             if (distance <= 5)
                                 Flag.reachPoint++;
                             String howToNextPoint = "现在到达第 " + Flag.reachPoint + "个点,距离下一个点" + "\n";
-                            if(azimuth<0){
-                                howToNextPoint += "向右方向" + String.format("%.2f",azimuth) + "°" + "\n";
+                            if (azimuth < 0) {
+                                howToNextPoint += "向右方向" + String.format("%.2f", azimuth) + "°" + "\n";
+                            } else if (azimuth > 0) {
+                                howToNextPoint += "向左方向" + String.format("%.2f", azimuth) + "°" + "\n";
+                            } else {
+                                howToNextPoint += "正对方向" + "\n";
                             }
                             howToNextPoint += "距离: " + String.format("%.2f", distance);
                             textView.setText(howToNextPoint);

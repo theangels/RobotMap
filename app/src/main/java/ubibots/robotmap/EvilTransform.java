@@ -36,8 +36,7 @@ public class EvilTransform {
         if (outOfChina(wgLat, wgLon)) {
             ret.setLatitude(wgLat);
             ret.setLongitude(wgLon);
-        }
-        else {
+        } else {
             double dLat = transformLat(wgLon - 105.0, wgLat - 35.0);
             double dLon = transformLon(wgLon - 105.0, wgLat - 35.0);
             double radLat = wgLat / 180.0 * pi;

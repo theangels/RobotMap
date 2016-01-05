@@ -8,7 +8,7 @@ import android.hardware.SensorManager;
 import android.view.Gravity;
 import android.widget.TextView;
 
-public class Direction  {
+public class Direction {
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor magnetic;
@@ -19,7 +19,9 @@ public class Direction  {
     private float[] accelerometerValues;
     private float[] magneticFieldValues;
 
-    /**Debug*/
+    /**
+     * Debug
+     */
     private TextView textView;
 
     public SensorManager getSensorManager() {
@@ -42,7 +44,7 @@ public class Direction  {
         return direction;
     }
 
-    Direction(){
+    Direction() {
         accelerometerValues = new float[3];
         magneticFieldValues = new float[3];
         /**Debug*/
@@ -50,26 +52,28 @@ public class Direction  {
         sensorManagerInit();
     }
 
-    /**Debug*/
-    private void textViewInit(){
-        textView = (TextView)MapsActivity.mapsActivity.findViewById(R.id.direction);
+    /**
+     * Debug
+     */
+    private void textViewInit() {
+        textView = (TextView) MapsActivity.mapsActivity.findViewById(R.id.direction);
         textView.setGravity(Gravity.LEFT);
         textView.setTextColor(Color.RED);
         textView.setTextSize(15);
     }
 
-    private void calculateOrientation(){
+    private void calculateOrientation() {
         float[] values = new float[3];
         float[] R = new float[9];
         SensorManager.getRotationMatrix(R, null, accelerometerValues, magneticFieldValues);
         SensorManager.getOrientation(R, values);
-        direction = values[0] = (float)Math.toDegrees(values[0]);
-        String view = "现方位角为北偏东" + String.format("%.2f",values[0]) + "°";
+        direction = values[0] = (float) Math.toDegrees(values[0]);
+        String view = "现方位角为北偏东" + String.format("%.2f", values[0]) + "°";
         textView.setText(view);
     }
 
     private void sensorManagerInit() {
-        sensorManager = (SensorManager)MapsActivity.mapsActivity.getSystemService(MapsActivity.SENSOR_SERVICE);
+        sensorManager = (SensorManager) MapsActivity.mapsActivity.getSystemService(MapsActivity.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
@@ -86,7 +90,8 @@ public class Direction  {
             }
 
             @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            }
         };
     }
 }
