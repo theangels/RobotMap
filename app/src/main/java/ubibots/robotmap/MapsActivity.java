@@ -153,9 +153,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // 要做的事情
             switch (msg.what) {
                 case 1:
-                    /**Debug
-                     System.out.println(mGPS.getmCurrentLocation());
-                     */
                     if (mGPS.getCurrentLocation() != null) {
                         Location mLocation = mGPS.getCurrentLocation();
                         LatLng initial = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
@@ -191,9 +188,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // 要做的事情
             switch (msg.what) {
                 case 1:
-                    /**Debug
-                     System.out.println(target.getDest());
-                     */
                     if (Flag.getGPS && Flag.requireFinish) {
                         Route.DownloadTask downloadTask = route.new DownloadTask();
                         Flag.getGPS = false;
