@@ -2,6 +2,7 @@ package ubibots.robotmap;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.hardware.Sensor;
 import android.location.Location;
 import android.os.Handler;
 import android.os.Message;
@@ -105,20 +106,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void getTargetInit(){
         target = new Target();
         textView = (TextView)findViewById(R.id.tonextpoint);
-        textView.setGravity(Gravity.RIGHT);
+        textView.setGravity(Gravity.LEFT);
         textView.setTextColor(Color.RED);
         textView.setTextSize(15);
     }
 
     private void getDirectionInit(){
         direction = new Direction();
+        direction.getSensorManager().registerListener(direction.getSensorLintener(), direction.getAccelerometer(), Sensor.TYPE_ACCELEROMETER);
+        direction.getSensorManager().registerListener(direction.getSensorLintener(), direction.getMagnetic(), Sensor.TYPE_MAGNETIC_FIELD);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-//        googleMap.setMyLocationEnabled(true);
+    }
+
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+        direction.getSensorManager().registerListener(direction.getSensorLintener(), direction.getAccelerometer(), Sensor.TYPE_ACCELEROMETER);
+        direction.getSensorManager().registerListener(direction.getSensorLintener(), direction.getMagnetic(), Sensor.TYPE_MAGNETIC_FIELD);
+    }
+
+    @Override
+    public synchronized void onPause(){
+        super.onPause();
+        direction.getSensorManager().unregisterListener(direction.getSensorLintener());
     }
 
     TimerTask getGPSTask = new TimerTask() {
@@ -218,11 +233,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         else {
                             LatLng op = new LatLng(mGPS.getCurrentLocation().getLatitude(), mGPS.getCurrentLocation().getLongitude());
                             LatLng ed = route.getmPoint().get(Flag.reachPoint + 1);
-                            double azimuth = Route.getAzimuth(op, ed);
+                            double azimuth = Route.getAzimuth(op, ed)-direction.getDirection();
                             double distance = Route.getDistance(op, ed);
                             if (distance <= 5)
                                 Flag.reachPoint++;
-                            String howToNextPoint = "现在到达第 " + Flag.reachPoint + "个点,距离下一个点" + "\n" + "向北偏东: " + String.format("%.2f", azimuth) + "\n" + "距离: " + String.format("%.2f", distance);
+                            String howToNextPoint = "现在到达第 " + Flag.reachPoint + "个点,距离下一个点" + "\n";
+                            if(azimuth<0){
+                                howToNextPoint += "向右方向" + String.format("%.2f",azimuth) + "°" + "\n";
+                            }
+                            howToNextPoint += "距离: " + String.format("%.2f", distance);
                             textView.setText(howToNextPoint);
                         }
                     }
