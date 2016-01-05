@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -104,6 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void getTargetInit(){
         target = new Target();
         textView = (TextView)findViewById(R.id.tonextpoint);
+        textView.setGravity(Gravity.RIGHT);
         textView.setTextColor(Color.RED);
         textView.setTextSize(15);
     }
@@ -116,7 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        googleMap.setMyLocationEnabled(true);
+//        googleMap.setMyLocationEnabled(true);
     }
 
     TimerTask getGPSTask = new TimerTask() {

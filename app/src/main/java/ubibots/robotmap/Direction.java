@@ -5,9 +5,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.Gravity;
 import android.widget.TextView;
-
-import java.util.Map;
 
 public class Direction  {
     private SensorManager sensorManager;
@@ -26,6 +25,7 @@ public class Direction  {
 
     private void textViewInit(){
         textView = (TextView)MapsActivity.mapsActivity.findViewById(R.id.direction);
+        textView.setGravity(Gravity.RIGHT);
         textView.setTextColor(Color.RED);
         textView.setTextSize(15);
     }
@@ -48,6 +48,7 @@ public class Direction  {
         SensorEventListener sensorLintener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
+                System.out.println("Test");
                 if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                     accelerometerValues = event.values;
                 }
@@ -60,5 +61,8 @@ public class Direction  {
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy) {}
         };
+
+        sensorManager.registerListener(sensorLintener, accelerometer, Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(sensorLintener, magnetic, Sensor.TYPE_MAGNETIC_FIELD);
     }
 }
