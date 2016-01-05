@@ -35,8 +35,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Route route;
     private Direction direction;
 
-    private final Timer getGPSTimer = new Timer();
-    private final Timer getDestTimer = new Timer();
+    private final Timer GPSTimer = new Timer();
+    private final Timer destTimer = new Timer();
     private final Timer findTheWayTimer = new Timer();
 
     private MarkerOptions markerOption;
@@ -76,7 +76,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void GPSInit() {
         mGPS = new GPS();
-        getGPSTimer.schedule(getGPSTask, 1000, 40);//推迟 间断
+        GPSTimer.schedule(GPSTask, 1000, 40);//推迟 间断
     }
 
     private void getRouteInit() {
@@ -94,7 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
-        getDestTimer.schedule(getRouteTask, 1000, 40);//推迟 间断
+        destTimer.schedule(routeTask, 1000, 40);//推迟 间断
     }
 
     private void markerInit() {
@@ -135,18 +135,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         direction.getSensorManager().unregisterListener(direction.getSensorLintener());
     }
 
-    TimerTask getGPSTask = new TimerTask() {
+    TimerTask GPSTask = new TimerTask() {
         @Override
         public void run() {
             Message message = new Message();
             message.what = 1;
-            getGPSHandler.sendMessage(message);
+            GPSHandler.sendMessage(message);
         }
     };
     /**
      * 不间断获取GPS 0.4秒一次
      */
-    Handler getGPSHandler = new Handler() {
+    Handler GPSHandler = new Handler() {
         @Override
         public synchronized void handleMessage(Message msg) {
             // TODO Auto-generated method stub
@@ -170,18 +170,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 
-    TimerTask getRouteTask = new TimerTask() {
+    TimerTask routeTask = new TimerTask() {
         @Override
         public void run() {
             Message message = new Message();
             message.what = 1;
-            getRouteHandler.sendMessage(message);
+            routeHandler.sendMessage(message);
         }
     };
     /**
      * 不间断询问导航 0.4秒一次
      */
-    Handler getRouteHandler = new Handler() {
+    Handler routeHandler = new Handler() {
         @Override
         public synchronized void handleMessage(Message msg) {
             // TODO Auto-generated method stub
