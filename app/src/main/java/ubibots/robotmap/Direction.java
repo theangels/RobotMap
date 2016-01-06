@@ -65,6 +65,7 @@ public class Direction {
                     magneticFieldValues = event.values;
                 }
                 calculateOrientation();
+                Flag.directionFinish = true;
             }
 
             @Override

@@ -5,5 +5,6 @@ public class Flag {
     public static boolean getGPS = false;
     public static boolean requireFinish = false;
     public static boolean getRouteFinish = false;
+    public static boolean directionFinish = false;
     public static int reachPoint = -1;
 }

@@ -224,7 +224,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // 要做的事情
             switch (msg.what) {
                 case 1:
-                    if (Flag.getRouteFinish) {
+                    if (Flag.getRouteFinish && Flag.directionFinish) {
                         if (Flag.reachPoint == route.getNode().size()) {
                             findTheWayTimer.cancel();
                             Flag.reachPoint = -1;
