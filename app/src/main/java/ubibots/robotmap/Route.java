@@ -181,46 +181,48 @@ public class Route {
             node = new ArrayList<LatLng>();
             /***/
             // Traversing through all the routes
-            for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList<LatLng>();
-                lineOptions = new PolylineOptions();
+            if(result!=null) {
+                for (int i = 0; i < result.size(); i++) {
+                    points = new ArrayList<LatLng>();
+                    lineOptions = new PolylineOptions();
 
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
+                    // Fetching i-th route
+                    List<HashMap<String, String>> path = result.get(i);
 
-                // Fetching all the points in i-th route
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
+                    // Fetching all the points in i-th route
+                    for (int j = 0; j < path.size(); j++) {
+                        HashMap<String, String> point = path.get(j);
 
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
-                    node.add(position);
-                    points.add(position);
+                        double lat = Double.parseDouble(point.get("lat"));
+                        double lng = Double.parseDouble(point.get("lng"));
+                        LatLng position = new LatLng(lat, lng);
+                        node.add(position);
+                        points.add(position);
+                    }
+
+                    // Adding all the points in the route to LineOptions
+                    lineOptions.addAll(points);
+                    lineOptions.width(3);
+
+                    // Changing the color polyline according to the mode
+                    lineOptions.color(Color.BLUE);
                 }
+                // Drawing polyline in the Google Map for the i-th route
+                MapsActivity.mapsActivity.getGoogleMap().addPolyline(lineOptions);
 
-                // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(3);
 
-                // Changing the color polyline according to the mode
-                lineOptions.color(Color.BLUE);
+                /**Debug*/
+                for (int i = 0; i < marker.size(); i++) {
+                    marker.get(i).remove();
+                }
+                marker.clear();
+                for (int i = 0; i < node.size(); i++) {
+                    marker.add(MapsActivity.mapsActivity.getGoogleMap().addMarker(new MarkerOptions()
+                            .position(node.get(i))
+                            .title("" + i)));
+                }
+                Flag.getRouteFinish = true;
             }
-            // Drawing polyline in the Google Map for the i-th route
-            MapsActivity.mapsActivity.getGoogleMap().addPolyline(lineOptions);
-
-
-            /**Debug*/
-            for (int i = 0; i < marker.size(); i++) {
-                marker.get(i).remove();
-            }
-            marker.clear();
-            for (int i = 0; i < node.size(); i++) {
-                marker.add(MapsActivity.mapsActivity.getGoogleMap().addMarker(new MarkerOptions()
-                        .position(node.get(i))
-                        .title("" + i)));
-            }
-            Flag.getRouteFinish = true;
         }
     }
 

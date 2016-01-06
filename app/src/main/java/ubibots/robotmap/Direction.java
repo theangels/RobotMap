@@ -48,6 +48,9 @@ public class Direction {
         SensorManager.getRotationMatrix(R, null, accelerometerValues, magneticFieldValues);
         SensorManager.getOrientation(R, values);
         direction = values[0] = (float) Math.toDegrees(values[0]);
+        if(direction<0){
+            direction += 360;
+        }
     }
 
     private void sensorManagerInit() {

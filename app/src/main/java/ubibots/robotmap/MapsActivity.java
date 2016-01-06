@@ -233,12 +233,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             LatLng ed = route.getNode().get(Flag.reachPoint + 1);
                             double azimuth = Route.getAzimuth(op, ed) - direction.getDirection();
                             double distance = Route.getDistance(op, ed);
-                            if (distance <= 5)
+                            if (distance <= 10)
                                 Flag.reachPoint++;
-                            String howToNextPoint = "现在到达第 " + Flag.reachPoint + "个点,距离下一个点" + "\n";
-                            if (azimuth < -1 ) {
+                            String howToNextPoint = "现在朝向北偏东" + String.format("%.2f",direction.getDirection()) + "\n";
+                            howToNextPoint += "现在到达第 " + Flag.reachPoint + "个点,距离下一个点" + "\n";
+                            if (azimuth < -10 ) {
                                 howToNextPoint += "向左方向" + String.format("%.2f", -azimuth) + "°" + "\n";
-                            } else if (azimuth > 1) {
+                            } else if (azimuth > 10) {
                                 howToNextPoint += "向右方向" + String.format("%.2f", azimuth) + "°" + "\n";
                             } else {
                                 howToNextPoint += "正对方向" + "\n";
