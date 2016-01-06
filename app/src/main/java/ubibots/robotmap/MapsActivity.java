@@ -153,7 +153,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // 要做的事情
             switch (msg.what) {
                 case 1:
-                    if (mGPS.getCurrentLocation() != null) {
+                    if (Flag.getGPS) {
                         Location mLocation = mGPS.getCurrentLocation();
                         LatLng initial = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
                         if (marker != null) {
