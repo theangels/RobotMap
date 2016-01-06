@@ -9,7 +9,7 @@ public class Direction {
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor magnetic;
-    SensorEventListener sensorLintener;
+    private SensorEventListener sensorLintener;
 
     private float direction = 0;
 
