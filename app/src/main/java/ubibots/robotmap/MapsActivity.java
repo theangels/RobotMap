@@ -228,6 +228,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (Flag.reachPoint == route.getNode().size()) {
                             findTheWayTimer.cancel();
                             Flag.reachPoint = -1;
+                            Flag.getRouteFinish = false;
+                            Flag.directionFinish = false;
                         } else {
                             LatLng op = new LatLng(mGPS.getCurrentLocation().getLatitude(), mGPS.getCurrentLocation().getLongitude());
                             LatLng ed = route.getNode().get(Flag.reachPoint + 1);
